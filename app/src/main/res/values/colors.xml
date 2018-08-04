@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="ghostWhite">#FEFEFF</color>
+    <color name="pattensBlue">#D8F3FC</color>
+    <color name="lightBlue">#ADDAE6</color>
+    <color name="poloBlue">#90AADD</color>
+
+
+</resources>

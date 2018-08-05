@@ -4,10 +4,13 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
@@ -21,19 +24,20 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-
+        /*
         //LeakCanary setup to see the leaks in the application
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return;
         }
-        LeakCanary.install(getApplication());
+        LeakCanary.install(getApplication());*/
 
 
         //Viewmodel setup for the MainActivity
@@ -42,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
         //setting up the views in the activity
         setupActivity();
+
+        //Setting up animations
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setupWindowAnimations();
+        }
 
     }
 
@@ -56,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         RecipeModel[] recipeData = viewModel.getRecipeData();
 
         //Setting up the recycler view
-        mAdapter = new RecipeListAdapter(recipeData);
+        mAdapter = new RecipeListAdapter(recipeData, this);
 
         binding.mainRecipeListRv.setAdapter(mAdapter);
 
@@ -71,6 +80,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setupWindowAnimations() {
+        Slide slide = new Slide();
+        slide.setDuration(1000);
+        getWindow().setExitTransition(slide);
+
+
+        getWindow().setReenterTransition(slide);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
+import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
 import java.util.zip.Inflater;
 
@@ -18,10 +21,12 @@ import java.util.zip.Inflater;
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>{
 
     private static RecipeModel[] recipeModel;
+    private Context context;
 
 
-    public RecipeListAdapter(RecipeModel[] data) {
+    public RecipeListAdapter(RecipeModel[] data, Context context) {
         recipeModel = data;
+        this.context = context;
     }
 
 
@@ -42,6 +47,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mTitle = itemView.findViewById(R.id.view_holder_main_title_tv);
             mDescription = itemView.findViewById(R.id.view_holder_main_desc_tv);
             mServings = itemView.findViewById(R.id.view_holder_main_servings_tv);
+
+            //on clicking a card, detail activity should open
+            itemView.setOnClickListener((view)-> {
+                Intent intent = new Intent(context, DetailActivity.class);
+                //intent.putExtra(context.getPackageName(), recipeModel[getAdapterPosition()]);
+                context.startActivity(intent);
+            });
         }
     }
 

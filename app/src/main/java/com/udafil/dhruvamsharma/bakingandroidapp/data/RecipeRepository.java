@@ -20,7 +20,8 @@ import java.io.UnsupportedEncodingException;
 /**
  * Repository class to abstract the data sources for the view model.
  */
-final public class RecipeRepository {
+//TODO make it final back again
+public class RecipeRepository {
 
     private static RecipeRepository sRecipeRepository;
 

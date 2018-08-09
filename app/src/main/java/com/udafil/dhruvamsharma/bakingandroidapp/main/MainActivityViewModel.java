@@ -8,10 +8,13 @@ import android.util.Log;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MainActivityViewModel extends AndroidViewModel{
 
     private RecipeRepository recipeRepository;
-    private RecipeModel[] model;
+    private List<RecipeModel> model;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -28,14 +31,18 @@ public class MainActivityViewModel extends AndroidViewModel{
     }
 
 
-    public RecipeModel[] getRecipeData() {
+    public List<RecipeModel> getRecipeData() {
 
         if(model == null) {
-            model = recipeRepository.getRecipeData(getApplication().getApplicationContext());
+            try {
+                model = recipeRepository.getRecipeData(getApplication().getApplicationContext());
+            } catch (IOException e) {
+                model = null;
+            }
             if (model == null) {
                 Log.e("MainActivityViewModel", "model is empty");
             }
-            Log.e("MainActivityViewModel", model.toString());
+
         }
 
 

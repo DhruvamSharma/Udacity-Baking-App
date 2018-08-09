@@ -13,6 +13,7 @@ import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
+import java.util.List;
 import java.util.zip.Inflater;
 
 /**
@@ -20,11 +21,11 @@ import java.util.zip.Inflater;
  */
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder>{
 
-    private static RecipeModel[] recipeModel;
+    private static List<RecipeModel> recipeModel;
     private Context context;
 
 
-    public RecipeListAdapter(RecipeModel[] data, Context context) {
+    public RecipeListAdapter(List<RecipeModel> data, Context context) {
         recipeModel = data;
         this.context = context;
     }
@@ -76,9 +77,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
 
-        holder.mTitle.setText(recipeModel[position].getName());
-        holder.mDescription.setText("Id: " + recipeModel[position].getId());
-        holder.mServings.setText("Servings: " + recipeModel[position].getServings());
+        holder.mTitle.setText(recipeModel.get(position).getName());
+        holder.mDescription.setText("Id: " + recipeModel.get(position).getId());
+        holder.mServings.setText("Servings: " + recipeModel.get(position).getServings());
     }
 
     /**
@@ -90,7 +91,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public int getItemCount() {
         if(recipeModel == null)
             return 0;
-        return recipeModel.length;
+        return recipeModel.size();
     }
 
 
@@ -98,7 +99,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
      * public method to set the new data to the recycler view once the data is updated or added.
      * @param newData
      */
-    public void switchAdapter(RecipeModel[] newData) {
+    public void switchAdapter(List<RecipeModel> newData) {
         recipeModel = newData;
         notifyDataSetChanged();
     }

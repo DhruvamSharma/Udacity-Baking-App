@@ -6,6 +6,10 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+*This class is a POJO class to serialize and deserialize the JSON Objects.
+*This class stores the steps of the recipie.
+*/
 public class Step implements Parcelable
 {
 

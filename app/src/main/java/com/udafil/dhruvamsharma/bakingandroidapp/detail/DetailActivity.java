@@ -23,6 +23,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    //Method to be called only when viewed on Lollipop and gretaer devices.
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setUpWindowsAnimation() {
         Slide slide = new Slide();

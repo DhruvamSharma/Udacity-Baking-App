@@ -51,9 +51,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
             //on clicking a card, detail activity should open
             itemView.setOnClickListener((view)-> {
-                Intent intent = new Intent(context, DetailActivity.class);
-                //intent.putExtra(context.getPackageName(), recipeModel[getAdapterPosition()]);
-                context.startActivity(intent);
+                startDetailActivity(getAdapterPosition());
             });
         }
     }
@@ -102,5 +100,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public void switchAdapter(List<RecipeModel> newData) {
         recipeModel = newData;
         notifyDataSetChanged();
+    }
+
+
+    private void startDetailActivity(int position) {
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra(context.getPackageName(), recipeModel.get(position));
+        context.startActivity(intent);
     }
 }

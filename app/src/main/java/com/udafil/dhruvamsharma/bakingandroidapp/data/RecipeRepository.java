@@ -43,18 +43,20 @@ final public class RecipeRepository {
     public List<RecipeModel> getRecipeData(Context context) throws IOException {
 
         InputStreamReader reader = null;
-        JsonReader jsonReader;
+        com.google.gson.stream.JsonReader jsonReader = null;
         List<RecipeModel> model = new ArrayList<>();
+
 
         try {
             reader = new InputStreamReader(context.getAssets().open("recipe.json"), "UTF-8");
             Gson gson = GsonInstance.getGsonInstance();
 
-            jsonReader = new JsonReader(reader);
+            jsonReader = new com.google.gson.stream.JsonReader(reader);
             jsonReader.beginArray();
+            RecipeModel recipeModel;
             while( jsonReader.hasNext() ) {
-
-                model.add( gson.fromJson(reader, RecipeModel.class));
+                recipeModel = gson.fromJson(jsonReader, RecipeModel.class);
+                model.add( recipeModel );
 
             }
 
@@ -75,8 +77,9 @@ final public class RecipeRepository {
         }
 
         finally {
-            if (reader != null) {
+            if (reader != null && jsonReader != null) {
                 reader.close();
+                jsonReader.close();
             }
         }
 

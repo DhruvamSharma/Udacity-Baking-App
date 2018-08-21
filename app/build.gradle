@@ -51,7 +51,10 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
     /* ExoPlayer */
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.3'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.3'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.3'
+    implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
+
+    /* Parceler */
+    implementation 'org.parceler:parceler-api:1.1.11'
+    annotationProcessor 'org.parceler:parceler:1.1.11'
+
 }

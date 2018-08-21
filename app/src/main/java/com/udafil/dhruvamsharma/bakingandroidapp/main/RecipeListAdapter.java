@@ -2,6 +2,7 @@ package com.udafil.dhruvamsharma.bakingandroidapp.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 import java.util.zip.Inflater;
@@ -52,7 +55,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             //on clicking a card, detail activity should open
             itemView.setOnClickListener((view)-> {
                 Intent intent = new Intent(context, DetailActivity.class);
-                //intent.putExtra(context.getPackageName(), recipeModel[getAdapterPosition()]);
+                Parcelable wrapped = Parcels.wrap(recipeModel.get(getAdapterPosition()));
+                intent.putExtra(context.getPackageName(), wrapped);
                 context.startActivity(intent);
             });
         }

@@ -65,34 +65,72 @@ public class DetailActivity extends AppCompatActivity {
 
             mPlayerView.setPlayer(mExoPlayer);
 
-
-            Log.e(getPackageName(), recipeModel.getSteps().get(0).getVideoURL());
-
-            Uri uri = Uri.parse(recipeModel.getSteps().get(0).getVideoURL());
-            MediaSource mediaSource = buildMediaSource(uri);
-            mExoPlayer.prepare(mediaSource);
+            MediaSource mediaSource = buildMediaSource();
+            mExoPlayer.prepare(mediaSource, true, false);
 
             mExoPlayer.setPlayWhenReady(playWhenReady);
             mExoPlayer.seekTo(windowIndex,playBackPosition);
 
         }
-        else
-        Log.e(getPackageName(), "we are here!");
+        else {
+            //TODO handle error condition
+        }
+
 
 
     }
 
-    private MediaSource buildMediaSource(Uri uri) {
+    private MediaSource buildMediaSource() {
+
+        Uri uri = Uri.parse(recipeModel.getSteps().get(0).getVideoURL());
+
         return new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory(Util.getUserAgent(this, getResources().getString(R.string.app_name)))).
                 createMediaSource(uri);
+
+
     }
 
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mExoPlayer.stop();
-        mExoPlayer.release();
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
+
+    private void releasePlayer() {
+        if (mExoPlayer != null) {
+            playBackPosition = mExoPlayer.getCurrentPosition();
+            windowIndex = mExoPlayer.getCurrentWindowIndex();
+            playWhenReady = mExoPlayer.getPlayWhenReady();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 }

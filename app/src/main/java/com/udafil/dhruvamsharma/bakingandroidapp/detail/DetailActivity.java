@@ -72,11 +72,12 @@ public class DetailActivity extends AppCompatActivity {
             MediaSource mediaSource = buildMediaSource(uri);
             mExoPlayer.prepare(mediaSource);
 
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
             mExoPlayer.seekTo(windowIndex,playBackPosition);
 
         }
-
+        else
+        Log.e(getPackageName(), "we are here!");
 
 
     }
@@ -88,6 +89,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mExoPlayer.stop();
+        mExoPlayer.release();
+    }
 }

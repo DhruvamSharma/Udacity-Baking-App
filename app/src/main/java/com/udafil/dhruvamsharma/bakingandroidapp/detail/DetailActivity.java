@@ -99,38 +99,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (Util.SDK_INT > 23) {
-            initializePlayer();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
-            initializePlayer();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (Util.SDK_INT <= 23) {
-            releasePlayer();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (Util.SDK_INT > 23) {
-            releasePlayer();
-        }
-    }
-
+    /**
+     * Capturing the playback position, playWhenReady and windowIndex when teh app goes offScreen
+     * and releasing the shared resources.
+     */
     private void releasePlayer() {
         if (mExoPlayer != null) {
             playBackPosition = mExoPlayer.getCurrentPosition();
@@ -140,4 +112,54 @@ public class DetailActivity extends AppCompatActivity {
             mExoPlayer = null;
         }
     }
+
+
+
+
+    /**
+     * Handling releasing player nd codecs properly and gaining them as soon as in onStart.
+     * Since API 24, Multiwindow concept came into play soinitializing the player in onStart rather than in onResume
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    /**
+     * Initializing player in onResume for API > 24
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            initializePlayer();
+        }
+    }
+
+    /**
+     * Releasing player in onResume before API 24
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    /**
+     *  Multiwindow concept.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
+
+
 }

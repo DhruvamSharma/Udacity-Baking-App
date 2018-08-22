@@ -15,9 +15,12 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -34,6 +37,8 @@ public class DetailActivity extends AppCompatActivity {
     private static int windowIndex = 0;
     private static long playBackPosition = 0;
     private static boolean playWhenReady = true;
+    private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
+
 
     private RecipeModel recipeModel;
 
@@ -59,9 +64,11 @@ public class DetailActivity extends AppCompatActivity {
 
         if(recipeModel != null && mExoPlayer == null) {
 
+            TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
+
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(this),
-                    new DefaultTrackSelector(), new DefaultLoadControl());
+                    new DefaultTrackSelector(adaptiveTrackSelectionFactory), new DefaultLoadControl());
 
             mPlayerView.setPlayer(mExoPlayer);
 

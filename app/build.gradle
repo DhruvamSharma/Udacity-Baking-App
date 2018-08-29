@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+7apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
@@ -40,7 +40,7 @@ dependencies {
     /* Leak Canary for detecting leaks in the application */
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-    // Optional, if you use support library fragments:
+    // For support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
 
     /* GSON */

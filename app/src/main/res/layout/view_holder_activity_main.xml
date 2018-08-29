@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -31,9 +31,23 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/view_holder_main_title_tv"
                     tools:text="@string/app_name"
+                    android:layout_marginStart="32dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
 
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/view_holder_main_view"
+                    android:layout_marginLeft="32dp" />
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:background="@color/colorAccent"
+                    android:id="@+id/view_holder_main_view"
+
+                    app:layout_constraintStart_toStartOf="@id/view_holder_main_title_tv"
                     app:layout_constraintBottom_toTopOf="@id/view_holder_main_desc_tv"/>
+
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -41,8 +55,20 @@
                     android:id="@+id/view_holder_main_desc_tv"
                     tools:text="@string/app_name"
 
+                    app:layout_constraintBottom_toTopOf="@id/view_holder_main_servings_tv"
+                    app:layout_constraintStart_toStartOf="@id/view_holder_main_title_tv" />
+
+                <TextView
+                    android:id="@+id/view_holder_main_servings_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    app:fontFamily="@font/noto_sans"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/view_holder_main_title_tv"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    tools:text="@string/app_name" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -53,17 +79,7 @@
         </android.support.v7.widget.CardView>
 
 
-        <TextView
-            android:id="@+id/view_holder_main_servings_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            app:fontFamily="@font/noto_sans"
 
-            app:layout_constraintEnd_toEndOf="@id/view_holder_main_cv"
-            app:layout_constraintTop_toBottomOf="@id/view_holder_main_cv"
-            tools:text="@string/app_name" />
 
     </android.support.constraint.ConstraintLayout>
 

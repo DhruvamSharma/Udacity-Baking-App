@@ -58,8 +58,6 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         //Setting up fragment
         setUpFragment();
 
-
-
     }
 
     /**
@@ -75,9 +73,12 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
         if( findViewById(R.id.tablet_right_view_fl) != null ) {
             mTwoPane = true;
-
             mPlayerView = findViewById(R.id.video_view);
-            setUpRightFragment();
+
+            if(intent.hasExtra("position")) {
+                mStepPosition = intent.getIntExtra("position", 0);
+            }
+            initializePlayer();
 
         } else {
             mTwoPane = false;
@@ -87,10 +88,42 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     }
 
-    private void setUpRightFragment() {
 
-        if(intent.hasExtra("position")) {
-            mStepPosition = intent.getIntExtra("position", 0);
+
+
+
+    /**
+     * A method that sets up the Fragments and pass the
+     */
+    private void setUpFragment() {
+        //Constructing step list in phone mode
+        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+
+        //setting arguments for the fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(getPackageName(), Parcels.wrap(recipeData));
+        recipeDetailFragment.setArguments( bundle );
+
+        //Fragment Manager set up
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
+                .add(R.id.recipe_detail_fm, recipeDetailFragment)
+                .commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(int position) {
+
+        if(!mTwoPane) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            Parcelable wrapped = Parcels.wrap(recipeData);
+            intent.putExtra(getPackageName(), wrapped);
+            intent.putExtra("position", position);
+            startActivity(intent);
+        } else {
+            mStepPositionPrevious = mStepPosition;
+            mStepPosition = position;
 
             initializePlayer();
         }
@@ -99,12 +132,9 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     }
 
-
     private void initializePlayer() {
 
-        if(recipeData != null && mExoPlayer == null && mStepPositionPrevious != mStepPosition) {
-
-            Toast.makeText(this, "starting again", Toast.LENGTH_SHORT).show();
+        if(recipeData != null && mExoPlayer == null) {
 
             TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
 
@@ -155,45 +185,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         }
     }
 
-    /**
-     * A method that sets up the Fragments and pass the
-     */
-    private void setUpFragment() {
-        //Constructing step list in phone mode
-        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
 
-        //setting arguments for the fragment
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(getPackageName(), Parcels.wrap(recipeData));
-        recipeDetailFragment.setArguments( bundle );
-
-        //Fragment Manager set up
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction()
-                .add(R.id.recipe_detail_fm, recipeDetailFragment)
-                .commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(int position) {
-
-        if(!mTwoPane) {
-            Intent intent = new Intent(this, DetailActivity.class);
-            Parcelable wrapped = Parcels.wrap(recipeData);
-            intent.putExtra(getPackageName(), wrapped);
-            intent.putExtra("position", position);
-            startActivity(intent);
-        } else {
-            mStepPositionPrevious = mStepPosition;
-            mStepPosition = position;
-
-            initializePlayer();
-        }
-
-
-
-    }
 
 
     /**
@@ -203,8 +195,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23 && mTwoPane) {
-            //initializePlayer();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
         }
     }
 
@@ -214,8 +206,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onResume() {
         super.onResume();
-        if ((Util.SDK_INT <= 23 || mExoPlayer == null) && mTwoPane) {
-            //initializePlayer();
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+            initializePlayer();
         }
     }
 
@@ -225,7 +217,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23 && mTwoPane) {
+        if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
     }
@@ -236,14 +228,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23 && mTwoPane) {
+        if (Util.SDK_INT > 23) {
             releasePlayer();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

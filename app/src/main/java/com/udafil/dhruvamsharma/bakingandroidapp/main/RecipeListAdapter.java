@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
+import com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail.RecipeDetail;
 
 import org.parceler.Parcels;
 
@@ -57,10 +58,12 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
             //on clicking a card, detail activity should open
             viewHolderMainCV.setOnClickListener((view)-> {
-                Intent intent = new Intent(context, DetailActivity.class);
+
+                Intent intent = new Intent(context, RecipeDetail.class);
                 Parcelable wrapped = Parcels.wrap(recipeModel.get(getAdapterPosition()));
                 intent.putExtra(context.getPackageName(), wrapped);
                 context.startActivity(intent);
+
             });
         }
     }

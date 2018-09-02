@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         TextView mTitle;
         TextView mDescription;
         TextView mServings;
+        CardView viewHolderMainCV;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
@@ -51,9 +53,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mTitle = itemView.findViewById(R.id.view_holder_main_title_tv);
             mDescription = itemView.findViewById(R.id.view_holder_main_desc_tv);
             mServings = itemView.findViewById(R.id.view_holder_main_servings_tv);
+            viewHolderMainCV = itemView.findViewById(R.id.view_holder_main_cv);
 
             //on clicking a card, detail activity should open
-            itemView.setOnClickListener((view)-> {
+            viewHolderMainCV.setOnClickListener((view)-> {
                 Intent intent = new Intent(context, DetailActivity.class);
                 Parcelable wrapped = Parcels.wrap(recipeModel.get(getAdapterPosition()));
                 intent.putExtra(context.getPackageName(), wrapped);

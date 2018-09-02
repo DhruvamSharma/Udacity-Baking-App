@@ -56,11 +56,7 @@ public class RecipeDetailAdapter extends RecyclerView.Adapter<RecipeDetailAdapte
 
             recipeDetailStepLabel = itemView.findViewById(R.id.recipe_detail_step_label);
 
-            itemView.setOnClickListener(view -> {
-
-                mCallBack.onFragmentInteraction( getAdapterPosition());
-
-            });
+            itemView.setOnClickListener(view -> mCallBack.onFragmentInteraction( getAdapterPosition()));
         }
     }
 }

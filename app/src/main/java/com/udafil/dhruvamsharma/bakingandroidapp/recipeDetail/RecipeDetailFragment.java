@@ -54,7 +54,7 @@ public class RecipeDetailFragment extends Fragment {
         noDetails = view.findViewById(R.id.no_food_iv);
         mRecipeSteps = view.findViewById(R.id.recipe_detail_fragment_steps_rv);
 
-        Bundle bundle = null;
+        Bundle bundle;
 
         if (getArguments() != null) {
 

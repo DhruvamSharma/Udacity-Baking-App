@@ -33,6 +33,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private PlayerView mPlayerView;
     private SimpleExoPlayer mExoPlayer;
+    private int mStepPosition;
 
     private static int windowIndex = 0;
     private static long playBackPosition = 0;
@@ -51,8 +52,9 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if(intent.hasExtra(getPackageName())) {
+        if(intent.hasExtra(getPackageName()) && intent.hasExtra("position")) {
             recipeModel = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
+            mStepPosition = intent.getIntExtra("position", 0);
         }
 
         initializePlayer();
@@ -89,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private MediaSource buildMediaSource() {
 
-        Uri uri = Uri.parse(recipeModel.getSteps().get(0).getVideoURL());
+        Uri uri = Uri.parse(recipeModel.getSteps().get(mStepPosition).getVideoURL());
 
         return new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory(Util.getUserAgent(this, getResources().getString(R.string.app_name)))).

@@ -82,6 +82,7 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         else {
+            //Error Condition
             noDetails.setVisibility(View.VISIBLE);
             mRecipeSteps.setVisibility(View.GONE);
         }

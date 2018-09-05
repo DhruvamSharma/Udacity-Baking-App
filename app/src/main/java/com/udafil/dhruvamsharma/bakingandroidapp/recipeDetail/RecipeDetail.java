@@ -33,7 +33,7 @@ import org.parceler.Parcels;
 public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragment.OnFragmentInteractionListener {
 
     private RecipeModel recipeData;
-    private boolean mTwoPane;
+    private boolean mTwoPane = false;
     private Intent intent;
 
 
@@ -81,6 +81,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             initializePlayer();
 
         } else {
+
             mTwoPane = false;
         }
 
@@ -190,7 +191,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     /**
      * Handling releasing player nd codecs properly and gaining them as soon as in onStart.
-     * Since API 24, Multiwindow concept came into play soinitializing the player in onStart rather than in onResume
+     * Since API 24, Multiwindow concept came into play so initializing the player in onStart rather than in onResume
      */
     @Override
     public void onStart() {
@@ -231,5 +232,11 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         if (Util.SDK_INT > 23 && mTwoPane) {
             releasePlayer();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

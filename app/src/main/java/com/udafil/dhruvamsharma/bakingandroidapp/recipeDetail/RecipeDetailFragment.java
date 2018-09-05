@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,13 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
+import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Step;
 
 import org.parceler.Parcels;
 
 import java.util.Objects;
+
+import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
+import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,13 +32,16 @@ import java.util.Objects;
  * {@link RecipeDetailFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements VerticalStepperForm{
 
     private OnFragmentInteractionListener mListener;
-    private RecyclerView mRecipeSteps;
-    private RecipeDetailAdapter mAdapter;
+    //private RecyclerView mRecipeSteps;
+    //private RecipeDetailAdapter mAdapter;
     private RecipeModel recipeData;
     private ImageView noDetails;
+
+    private VerticalStepperFormLayout verticalStepperForm;
+    private String[] mySteps;
 
     public RecipeDetailFragment() {
         // Required empty public constructor
@@ -51,8 +61,8 @@ public class RecipeDetailFragment extends Fragment {
 
     private void setupFragment(View view) {
 
-        noDetails = view.findViewById(R.id.no_food_iv);
-        mRecipeSteps = view.findViewById(R.id.recipe_detail_fragment_steps_rv);
+        //noDetails = view.findViewById(R.id.no_food_iv);
+        //mRecipeSteps = view.findViewById(R.id.recipe_detail_fragment_steps_rv);
 
         Bundle bundle;
 
@@ -62,12 +72,22 @@ public class RecipeDetailFragment extends Fragment {
 
             recipeData = Parcels.unwrap(bundle.getParcelable(getContext().getPackageName()));
 
+            mySteps = new String[recipeData.getSteps().size()];
 
-            Log.e(getContext().getPackageName(), recipeData.toString());
+            int k = 0;
 
+            //getting primary colors for stepper
+            int colorPrimary = ContextCompat.getColor(getContext(), R.color.colorPrimary);
+            int colorPrimaryDark = ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorPrimaryDark);
 
+            for (int i = mySteps.length -1; i <= 0; i--) {
 
-            mAdapter = new RecipeDetailAdapter(recipeData, mListener);
+                mySteps[k] = recipeData.getSteps().get(i).getShortDescription();
+                k++;
+
+            }
+
+            /*mAdapter = new RecipeDetailAdapter(recipeData, mListener);
 
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -75,16 +95,27 @@ public class RecipeDetailFragment extends Fragment {
             mRecipeSteps.setAdapter(mAdapter);
             mRecipeSteps.setLayoutManager(manager);
 
-            mRecipeSteps.setHasFixedSize(true);
+            mRecipeSteps.setHasFixedSize(true);*/
 
+            verticalStepperForm = view.findViewById(R.id.vertical_stepper_form);
+
+
+            // Setting up and initializing the form
+            VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
+                    .primaryColor(colorPrimary)
+                    .primaryDarkColor(colorPrimaryDark)
+                    .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
+                    .init();
 
 
         }
 
         else {
+
             //Error Condition
-            noDetails.setVisibility(View.VISIBLE);
-            mRecipeSteps.setVisibility(View.GONE);
+            //noDetails.setVisibility(View.VISIBLE);
+            verticalStepperForm.setVisibility(View.GONE);
+
         }
 
     }
@@ -106,6 +137,34 @@ public class RecipeDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    /**
+     * Methods for implementing Material Stepper form
+     * @param stepNumber
+     * @return
+     */
+    @Override
+    public View createStepContentView(int stepNumber) {
+
+        //inflating view from XML file:R.layout.step_layout and setting text to the TextView in it.
+        View view = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.stpper_layout, null, false);
+        TextView stepShortDescription = view.findViewById(R.id.stepper_description_text_sl);
+        stepShortDescription.setText(recipeData.getSteps().get(stepNumber).getShortDescription());
+        return view;
+    }
+
+    @Override
+    public void onStepOpening(int stepNumber) {
+
+        verticalStepperForm.setActiveStepAsCompleted();
+
+    }
+
+    @Override
+    public void sendData() {
+
     }
 
     /**

@@ -195,7 +195,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT > 23 && mTwoPane) {
             initializePlayer();
         }
     }
@@ -206,7 +206,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onResume() {
         super.onResume();
-        if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+        if ((Util.SDK_INT <= 23 || mExoPlayer == null && mTwoPane)) {
             initializePlayer();
         }
     }
@@ -217,7 +217,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23) {
+        if (Util.SDK_INT <= 23&& mTwoPane) {
             releasePlayer();
         }
     }
@@ -228,7 +228,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT > 23 && mTwoPane) {
             releasePlayer();
         }
     }

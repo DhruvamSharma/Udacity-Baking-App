@@ -24,7 +24,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".recipeDetail.RecipeDetail"></activity>
+        <activity android:name=".recipeDetail.RecipeDetail"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

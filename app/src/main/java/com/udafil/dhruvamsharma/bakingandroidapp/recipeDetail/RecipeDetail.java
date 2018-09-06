@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -35,7 +38,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     private RecipeModel recipeData;
     private boolean mTwoPane = false;
     private Intent intent;
-
+    private ImageView mNoFoodImage;
+    private TextView descriptionForText;
 
     private PlayerView mPlayerView;
     private SimpleExoPlayer mExoPlayer;
@@ -71,14 +75,24 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             recipeData = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
         }
 
+
+        mNoFoodImage = findViewById(R.id.no_video_image_iv);
+
         if( findViewById(R.id.tablet_right_view_fl) != null ) {
             mTwoPane = true;
             mPlayerView = findViewById(R.id.video_view);
 
+            descriptionForText = findViewById(R.id.description_for_step_tablet_tv);
+
             if(intent.hasExtra("position")) {
                 mStepPosition = intent.getIntExtra("position", 0);
+
+                initializePlayer();
+
+                descriptionForText.setText(recipeData.getSteps().get(mStepPosition).getDescription());
             }
-            initializePlayer();
+
+
 
         } else {
 
@@ -103,6 +117,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         //setting arguments for the fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable(getPackageName(), Parcels.wrap(recipeData));
+        bundle.putBoolean("isTwoPane", mTwoPane);
         recipeDetailFragment.setArguments( bundle );
 
         //Fragment Manager set up
@@ -123,10 +138,11 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             intent.putExtra("position", position);
             startActivity(intent);
         } else {
+
             mStepPositionPrevious = mStepPosition;
             mStepPosition = position;
-
             initializePlayer();
+
         }
 
 
@@ -135,7 +151,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     private void initializePlayer() {
 
-        if(recipeData != null && mExoPlayer == null) {
+        if(recipeData != null && mStepPositionPrevious != mStepPosition && mTwoPane) {
 
             TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
 
@@ -146,14 +162,24 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             mPlayerView.setPlayer(mExoPlayer);
 
             MediaSource mediaSource = buildMediaSource();
-            mExoPlayer.prepare(mediaSource, true, false);
 
-            mExoPlayer.setPlayWhenReady(playWhenReady);
-            mExoPlayer.seekTo(windowIndex,playBackPosition);
+            if( mediaSource == null ) {
+                mPlayerView.setVisibility(View.GONE);
+                mNoFoodImage.setVisibility(View.VISIBLE);
+
+            } else {
+                mPlayerView.setVisibility(View.VISIBLE);
+                mNoFoodImage.setVisibility(View.GONE);
+                mExoPlayer.prepare(mediaSource, true, false);
+
+                mExoPlayer.setPlayWhenReady(playWhenReady);
+                mExoPlayer.seekTo(windowIndex,playBackPosition);
+            }
 
         }
         else {
             //TODO handle error condition
+
         }
 
 
@@ -161,6 +187,10 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     }
 
     private MediaSource buildMediaSource() {
+
+        if (recipeData.getSteps().get(mStepPosition).getVideoURL().equals("")) {
+            return null;
+        }
 
         Uri uri = Uri.parse(recipeData.getSteps().get(mStepPosition).getVideoURL());
 

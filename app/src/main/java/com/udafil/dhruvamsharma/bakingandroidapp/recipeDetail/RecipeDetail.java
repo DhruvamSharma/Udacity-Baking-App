@@ -3,15 +3,12 @@ package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -27,11 +24,14 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
+import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
+
+import java.io.IOException;
+import java.util.List;
 
 public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragment.OnFragmentInteractionListener {
 
@@ -149,6 +149,38 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     }
 
+    @Override
+    public void onRecipeChange(Integer id) {
+
+        List<RecipeModel> data;
+
+        try {
+            data = RecipeRepository.getInstance().getRecipeData(this);
+
+            if (data != null) {
+                for( RecipeModel model : data ) {
+
+                    if (id + 1 == model.getId()) {
+
+                        Intent newIntent = new Intent(this, RecipeDetail.class);
+                        newIntent.putExtra(getPackageName(), Parcels.wrap(model));
+                        newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(newIntent);
+
+                        break;
+                    }
+
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     private void initializePlayer() {
 
         if(recipeData != null && mStepPositionPrevious != mStepPosition && mTwoPane) {
@@ -201,6 +233,18 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        //setup activity
+        setupActivity();
+
+        //Setting up fragment
+        setUpFragment();
+
+    }
 
     /**
      * Capturing the playback position, playWhenReady and windowIndex when teh app goes offScreen

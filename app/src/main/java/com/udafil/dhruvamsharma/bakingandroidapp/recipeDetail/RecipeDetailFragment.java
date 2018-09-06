@@ -2,31 +2,25 @@ package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Step;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
 import org.parceler.Parcels;
-
-import java.util.Objects;
 
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
@@ -51,6 +45,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     private LinearLayout layoutBottomSheet;
     private BottomSheetBehavior bottomSheetBehavior;
+    private Button changeRecipeButton;
 
     public RecipeDetailFragment() {
         // Required empty public constructor
@@ -132,6 +127,14 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
             setupBottomSheet(view);
 
+            changeRecipeButton = view.findViewById(R.id.changeRecipe);
+
+            changeRecipeButton.setOnClickListener(view1 -> {
+
+                mListener.onRecipeChange(recipeData.getId());
+
+            });
+
 
         }
 
@@ -149,6 +152,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+
 
 
         /**
@@ -257,6 +261,8 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -270,5 +276,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     public interface OnFragmentInteractionListener {
 
         void onFragmentInteraction(int position);
+
+        void onRecipeChange(Integer id);
     }
 }

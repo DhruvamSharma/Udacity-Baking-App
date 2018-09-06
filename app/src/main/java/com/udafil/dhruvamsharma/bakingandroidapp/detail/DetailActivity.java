@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -40,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private static boolean playWhenReady = true;
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
-
+    private TextView descriptionForText;
     private RecipeModel recipeModel;
 
     @Override
@@ -49,15 +50,21 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         mPlayerView = findViewById(R.id.video_view);
+        descriptionForText = findViewById(R.id.description_for_step_tv);
+
 
         Intent intent = getIntent();
 
         if(intent.hasExtra(getPackageName()) && intent.hasExtra("position")) {
             recipeModel = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
             mStepPosition = intent.getIntExtra("position", 0);
+
+            descriptionForText.setText(recipeModel.getSteps().get(mStepPosition).getDescription());
+
+            initializePlayer();
         }
 
-        initializePlayer();
+
 
     }
 
@@ -166,6 +173,10 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+        playBackPosition = 0;
+        windowIndex = 0;
+
         finish();
     }
 }

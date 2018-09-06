@@ -1,8 +1,11 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Step;
+import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
 import org.parceler.Parcels;
 
@@ -39,9 +45,12 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     //private RecipeDetailAdapter mAdapter;
     private RecipeModel recipeData;
     private ImageView noDetails;
-
+    private Boolean mTwoPane;
     private VerticalStepperFormLayout verticalStepperForm;
     private String[] mySteps;
+
+    private LinearLayout layoutBottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     public RecipeDetailFragment() {
         // Required empty public constructor
@@ -71,6 +80,9 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             bundle = getArguments();
 
             recipeData = Parcels.unwrap(bundle.getParcelable(getContext().getPackageName()));
+            if(bundle.containsKey("isTwoPane"))
+            mTwoPane = bundle.getBoolean("isTwoPane");
+
 
             mySteps = new String[recipeData.getSteps().size()];
 
@@ -84,6 +96,8 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
                 mySteps[k] = recipeData.getSteps().get(i).getShortDescription();
                 k++;
+
+                Log.e("step line", mySteps[k]);
 
             }
 
@@ -104,8 +118,19 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
                     .primaryColor(colorPrimary)
                     .primaryDarkColor(colorPrimaryDark)
+                    .materialDesignInDisabledSteps(true)
                     .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
                     .init();
+
+            //setting data to the tiles because this library has issues
+            for(int i = 0; i < mySteps.length; i++) {
+
+                verticalStepperForm.setStepTitle(i, recipeData.getSteps().get(i).getShortDescription());
+
+            }
+
+
+            setupBottomSheet(view);
 
 
         }
@@ -120,6 +145,43 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     }
 
+    private void setupBottomSheet(View view) {
+
+        layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+
+
+        /**
+         * bottom sheet state change listener
+         * we are changing button text when sheet changed state
+         * */
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+
+    }
 
 
     @Override
@@ -148,15 +210,41 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     @Override
     public View createStepContentView(int stepNumber) {
 
+
+
         //inflating view from XML file:R.layout.step_layout and setting text to the TextView in it.
         View view = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.stpper_layout, null, false);
         TextView stepShortDescription = view.findViewById(R.id.stepper_description_text_sl);
         stepShortDescription.setText(recipeData.getSteps().get(stepNumber).getShortDescription());
+
+        if(mTwoPane) {
+            //code for tablet layout
+            view.setOnClickListener(view1 -> {
+
+                mListener.onFragmentInteraction(stepNumber);
+                Log.e("I am here", stepNumber + "");
+            });
+
+
+        } else {
+            //code for phones
+            view.setOnClickListener(view1 -> {
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(getContext().getPackageName(), Parcels.wrap(recipeData));
+                intent.putExtra("position", stepNumber);
+                startActivity(intent);
+            });
+
+        }
+
         return view;
     }
 
     @Override
     public void onStepOpening(int stepNumber) {
+
+        if(mTwoPane && stepNumber < mySteps.length)
+        mListener.onFragmentInteraction(stepNumber);
 
         verticalStepperForm.setActiveStepAsCompleted();
 
@@ -164,6 +252,8 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     @Override
     public void sendData() {
+
+        getActivity().finish();
 
     }
 

@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <string name="RECIPE_DATA_PREFERENCE_FILE">@string/package_name</string>
+    <string name="recipe_ingredients">RecipeIngredtients</string>
 </resources>

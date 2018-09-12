@@ -152,12 +152,16 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     @Override
     public void onRecipeChange(Integer id) {
 
-        List<RecipeModel> data;
+        List<RecipeModel> data = null;
+
 
         try {
             data = RecipeRepository.getInstance().getRecipeData(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            if (data != null) {
+        if (data != null) {
                 for( RecipeModel model : data ) {
 
                     if (id + 1 == model.getId()) {
@@ -173,9 +177,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
 
 

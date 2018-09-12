@@ -12,6 +12,8 @@ android {
         dataBinding {
             enabled true
         }
+
+        resValue 'string', 'package_name', android.defaultConfig.applicationId
     }
     buildTypes {
         release {

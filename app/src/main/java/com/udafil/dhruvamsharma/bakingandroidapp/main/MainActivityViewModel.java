@@ -34,11 +34,13 @@ public class MainActivityViewModel extends AndroidViewModel{
     public List<RecipeModel> getRecipeData() {
 
         if(model == null) {
+
             try {
                 model = recipeRepository.getRecipeData(getApplication().getApplicationContext());
             } catch (IOException e) {
-                model = null;
+                e.printStackTrace();
             }
+
             if (model == null) {
                 Log.e("MainActivityViewModel", "model is empty");
             }

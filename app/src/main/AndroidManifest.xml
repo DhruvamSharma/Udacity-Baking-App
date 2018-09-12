@@ -24,8 +24,19 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".recipeDetail.RecipeDetail"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".recipeDetail.RecipeDetail"
+            android:launchMode="singleTop" />
+
+        <receiver android:name=".RecipeWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

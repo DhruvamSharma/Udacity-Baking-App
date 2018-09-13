@@ -104,11 +104,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     }
 
 
-
-
-
     /**
-     * A method that sets up the Fragments and pass the
+     * A method that sets up the Fragments and pass the recipe data
      */
     private void setUpFragment() {
         //Constructing step list in phone mode
@@ -176,9 +173,6 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
                 }
             }
-
-
-
 
 
     }

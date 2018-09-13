@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
+import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
@@ -35,8 +37,6 @@ import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
 public class RecipeDetailFragment extends Fragment implements VerticalStepperForm{
 
     private OnFragmentInteractionListener mListener;
-    //private RecyclerView mRecipeSteps;
-    //private RecipeDetailAdapter mAdapter;
     private RecipeModel recipeData;
     private ImageView noDetails;
     private Boolean mTwoPane;
@@ -65,8 +65,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     private void setupFragment(View view) {
 
-        //noDetails = view.findViewById(R.id.no_food_iv);
-        //mRecipeSteps = view.findViewById(R.id.recipe_detail_fragment_steps_rv);
 
         Bundle bundle;
 
@@ -92,19 +90,8 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
                 mySteps[k] = recipeData.getSteps().get(i).getShortDescription();
                 k++;
 
-                Log.e("step line", mySteps[k]);
-
             }
 
-            /*mAdapter = new RecipeDetailAdapter(recipeData, mListener);
-
-            LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            manager.setOrientation(LinearLayoutManager.VERTICAL);
-
-            mRecipeSteps.setAdapter(mAdapter);
-            mRecipeSteps.setLayoutManager(manager);
-
-            mRecipeSteps.setHasFixedSize(true);*/
 
             verticalStepperForm = view.findViewById(R.id.vertical_stepper_form);
 
@@ -132,6 +119,11 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             changeRecipeButton.setOnClickListener(view1 -> {
 
                 mListener.onRecipeChange(recipeData.getId());
+
+                Toast.makeText(getContext(), recipeData.getId() + "getting recipe id", Toast.LENGTH_SHORT).show();
+
+                //Trying to save the recipe
+                RecipeWidget.selectRecipe(recipeData.getId(), getContext());
 
             });
 

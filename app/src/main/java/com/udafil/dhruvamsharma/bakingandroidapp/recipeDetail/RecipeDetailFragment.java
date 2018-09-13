@@ -118,9 +118,9 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
             changeRecipeButton.setOnClickListener(view1 -> {
 
-                mListener.onRecipeChange(recipeData.getId());
+                //mListener.onRecipeChange(recipeData.getId());
 
-                Toast.makeText(getContext(), recipeData.getId() + "getting recipe id", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), recipeData.getId() + " getting recipe id", Toast.LENGTH_SHORT).show();
 
                 //Trying to save the recipe
                 RecipeWidget.selectRecipe(recipeData.getId(), getContext());

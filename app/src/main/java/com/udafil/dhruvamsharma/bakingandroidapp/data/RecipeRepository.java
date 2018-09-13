@@ -108,21 +108,21 @@ final public class RecipeRepository {
 
         Set<String> dataSet = new HashSet<>();
 
-        for (int i = 1; i <= model.size(); i++) {
+        for (int i = 0; i < model.size(); i++) {
 
-            RecipeModel recipeModel = model.get(i-1);
+            RecipeModel recipeModel = model.get(i);
             String json = GsonInstance.getGsonInstance().toJson(recipeModel);
 
+            Toast.makeText(context, json, Toast.LENGTH_SHORT).show();
+
             dataSet.add(json);
-
-
 
 
         }
 
         editor.putStringSet( context.getString(R.string.recipe_ingredients), dataSet);
 
-        Toast.makeText(context, dataSet.size()+"storing in shared preferences", Toast.LENGTH_SHORT).show();
+
 
         editor.apply();
 
@@ -135,17 +135,23 @@ final public class RecipeRepository {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.RECIPE_DATA_PREFERENCE_FILE), Context.MODE_PRIVATE);
         dataSet = sharedPreferences.getStringSet(context.getString(R.string.recipe_ingredients), null);
 
-        Iterator<String> iterator = null;
+
+        Iterator<String> iterator;
         String response = null;
-        int position = 0;
+        int position = 1;
+
+
         if (dataSet != null) {
+
             iterator = dataSet.iterator();
 
             while(iterator.hasNext()) {
 
+                response = iterator.next();
+
                 if(position == i) {
 
-                    response = iterator.next();
+                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
 
                     break;
                 }

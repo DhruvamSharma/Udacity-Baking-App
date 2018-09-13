@@ -3,6 +3,7 @@ package com.udafil.dhruvamsharma.bakingandroidapp;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -27,7 +28,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                int appWidgetId, int modelPosition) {
 
         StringBuffer widgetText = new StringBuffer();
         Set<String> ingredientSet = null;
@@ -35,9 +36,10 @@ public class RecipeWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
-        ingredientSet = RecipeRepository.getInstance().getRecipeIngredients(1, context);
+        ingredientSet = RecipeRepository.getInstance().getRecipeIngredients(modelPosition, context);
 
         if (ingredientSet != null) {
+
             for (String data : ingredientSet) {
 
                 widgetText.append(data);
@@ -64,10 +66,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
+        selectRecipe(0 , context);
     }
 
     @Override
@@ -78,6 +77,18 @@ public class RecipeWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    static void selectRecipe( int i, Context context) {
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds( new ComponentName(context, RecipeWidget.class));
+
+        // There may be multiple widgets active, so update all of them
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId, i);
+        }
+
     }
 }
 

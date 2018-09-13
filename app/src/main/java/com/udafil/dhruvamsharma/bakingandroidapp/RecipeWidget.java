@@ -26,30 +26,28 @@ import java.util.Set;
 public class RecipeWidget extends AppWidgetProvider {
 
 
+    static int position =1;
+
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, int modelPosition) {
 
         StringBuffer widgetText = new StringBuffer();
-        Set<String> ingredientSet = null;
+        String ingredientSet = null;
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+
+        Toast.makeText(context, modelPosition+"in widget", Toast.LENGTH_SHORT).show();
 
         ingredientSet = RecipeRepository.getInstance().getRecipeIngredients(modelPosition, context);
 
         if (ingredientSet != null) {
 
-            for (String data : ingredientSet) {
+            widgetText.append(ingredientSet);
 
-                widgetText.append(data);
-                widgetText.append("\n");
-
-
-
-            }
         } else {
-            Toast.makeText(context, ingredientSet.size() + "", Toast.LENGTH_SHORT).show();
+            //TODO handle error conditions
         }
 
         Intent intent = new Intent(context, MainActivity.class);
@@ -66,7 +64,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        selectRecipe(0 , context);
+        selectRecipe(position , context);
     }
 
     @Override
@@ -79,14 +77,16 @@ public class RecipeWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void selectRecipe( int i, Context context) {
+    public static void selectRecipe( int i, Context context) {
+
+        position = i;
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds( new ComponentName(context, RecipeWidget.class));
 
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, i);
+            updateAppWidget(context, appWidgetManager, appWidgetId, position);
         }
 
     }

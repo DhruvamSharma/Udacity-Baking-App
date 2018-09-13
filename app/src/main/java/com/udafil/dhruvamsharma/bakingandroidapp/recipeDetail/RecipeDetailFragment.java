@@ -15,8 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
+import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
@@ -117,6 +119,11 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             changeRecipeButton.setOnClickListener(view1 -> {
 
                 mListener.onRecipeChange(recipeData.getId());
+
+                Toast.makeText(getContext(), recipeData.getId() + "getting recipe id", Toast.LENGTH_SHORT).show();
+
+                //Trying to save the recipe
+                RecipeWidget.selectRecipe(recipeData.getId(), getContext());
 
             });
 

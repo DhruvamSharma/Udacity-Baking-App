@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -107,30 +108,55 @@ final public class RecipeRepository {
 
         Set<String> dataSet = new HashSet<>();
 
-        for (int i = 1; i <= model.size()-1; i++) {
+        for (int i = 1; i <= model.size(); i++) {
 
-            RecipeModel recipeModel = model.get(i);
+            RecipeModel recipeModel = model.get(i-1);
             String json = GsonInstance.getGsonInstance().toJson(recipeModel);
 
             dataSet.add(json);
 
-            editor.putStringSet( context.getString(R.string.recipe_ingredients) + i, dataSet);
+
 
 
         }
+
+        editor.putStringSet( context.getString(R.string.recipe_ingredients), dataSet);
+
+        Toast.makeText(context, dataSet.size()+"storing in shared preferences", Toast.LENGTH_SHORT).show();
 
         editor.apply();
 
     }
 
-    public Set<String> getRecipeIngredients(int i, Context context) {
+    public String getRecipeIngredients(int i, Context context) {
 
         Set<String> dataSet;
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.RECIPE_DATA_PREFERENCE_FILE), Context.MODE_PRIVATE);
-        dataSet = sharedPreferences.getStringSet(context.getString(R.string.recipe_ingredients) + i, null);
+        dataSet = sharedPreferences.getStringSet(context.getString(R.string.recipe_ingredients), null);
 
-        return dataSet;
+        Iterator<String> iterator = null;
+        String response = null;
+        int position = 0;
+        if (dataSet != null) {
+            iterator = dataSet.iterator();
+
+            while(iterator.hasNext()) {
+
+                if(position == i) {
+
+                    response = iterator.next();
+
+                    break;
+                }
+
+                position++;
+            }
+
+        }
+
+
+        return response;
 
     }
 

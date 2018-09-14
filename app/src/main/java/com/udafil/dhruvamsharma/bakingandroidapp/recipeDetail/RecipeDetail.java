@@ -1,14 +1,17 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -27,6 +30,7 @@ import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
+import com.udafil.dhruvamsharma.bakingandroidapp.utils.GsonInstance;
 
 import org.parceler.Parcels;
 
@@ -40,6 +44,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     private Intent intent;
     private ImageView mNoFoodImage;
     private TextView descriptionForText;
+    private Button mChangeStepButton;
 
     private PlayerView mPlayerView;
     private SimpleExoPlayer mExoPlayer;
@@ -50,6 +55,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     private static long playBackPosition = 0;
     private static boolean playWhenReady = true;
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
+
+    RecipeDetailFragment recipeDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     }
 
     /**
-     * A method that sets up the intent
+     * A method that sets up the intent and cheks for tablet view
      */
     private void setupActivity() {
 
@@ -75,12 +82,14 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             recipeData = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
         }
 
-
         mNoFoodImage = findViewById(R.id.no_video_image_iv);
 
         if( findViewById(R.id.tablet_right_view_fl) != null ) {
             mTwoPane = true;
             mPlayerView = findViewById(R.id.video_view);
+
+
+            mChangeStepButton = findViewById(R.id.change_recipe_step_btn);
 
             descriptionForText = findViewById(R.id.description_for_step_tablet_tv);
 
@@ -91,6 +100,13 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
                 descriptionForText.setText(recipeData.getSteps().get(mStepPosition).getDescription());
             }
+
+            mChangeStepButton.setOnClickListener(view -> {
+
+                recipeDetailFragment.createStepContentView(1);
+                recipeDetailFragment.onStepOpening(1);
+
+            });
 
 
 
@@ -109,7 +125,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
      */
     private void setUpFragment() {
         //Constructing step list in phone mode
-        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
+        recipeDetailFragment = new RecipeDetailFragment();
 
         //setting arguments for the fragment
         Bundle bundle = new Bundle();
@@ -121,7 +137,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
-                .add(R.id.recipe_detail_fm, recipeDetailFragment)
+                .replace(R.id.recipe_detail_fm, recipeDetailFragment)
                 .commit();
     }
 
@@ -143,39 +159,17 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         }
 
 
-
     }
 
     @Override
     public void onRecipeChange(Integer id) {
 
-        List<RecipeModel> data = null;
+        recipeData = GsonInstance.getGsonInstance().fromJson(RecipeRepository.getInstance().getRecipe(id, this), RecipeModel.class);
 
-
-        try {
-            data = RecipeRepository.getInstance().getRecipeData(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (data != null) {
-                for( RecipeModel model : data ) {
-
-                    if (id + 1 == model.getId()) {
-
-                        Intent newIntent = new Intent(this, RecipeDetail.class);
-                        newIntent.putExtra(getPackageName(), Parcels.wrap(model));
-                        newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(newIntent);
-
-                        break;
-                    }
-
-                }
-            }
-
+        setUpFragment();
 
     }
+
 
     private void initializePlayer() {
 
@@ -230,17 +224,6 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     }
 
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        //setup activity
-        setupActivity();
-
-        //Setting up fragment
-        setUpFragment();
-
-    }
 
     /**
      * Capturing the playback position, playWhenReady and windowIndex when teh app goes offScreen

@@ -30,4 +30,10 @@
         app:layout_constraintStart_toStartOf="@id/video_view"
         app:layout_constraintTop_toBottomOf="@id/video_view"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="change step"
+        android:id="@+id/chnage_recipe_step_btn"/>
+
 </android.support.constraint.ConstraintLayout>

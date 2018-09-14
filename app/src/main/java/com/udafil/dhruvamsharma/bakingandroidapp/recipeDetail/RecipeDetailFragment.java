@@ -24,6 +24,8 @@ import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
 import org.parceler.Parcels;
 
+import java.util.Objects;
+
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
 
@@ -53,18 +55,10 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-
-        setupFragment(view);
-
-        return view;
-    }
-
-    private void setupFragment(View view) {
-
 
         Bundle bundle;
 
@@ -72,73 +66,93 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
             bundle = getArguments();
 
-            recipeData = Parcels.unwrap(bundle.getParcelable(getContext().getPackageName()));
-            if(bundle.containsKey("isTwoPane"))
-            mTwoPane = bundle.getBoolean("isTwoPane");
+            recipeData = Parcels.unwrap(bundle.getParcelable(Objects.requireNonNull(getContext()).getPackageName()));
 
+            if (bundle.containsKey("isTwoPane"))
+                mTwoPane = bundle.getBoolean("isTwoPane");
 
-            mySteps = new String[recipeData.getSteps().size()];
+            setupFragment(view);
 
-            int k = 0;
+        } else {
 
-            //getting primary colors for stepper
-            int colorPrimary = ContextCompat.getColor(getContext(), R.color.colorPrimary);
-            int colorPrimaryDark = ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorPrimaryDark);
-
-            for (int i = mySteps.length -1; i <= 0; i--) {
-
-                mySteps[k] = recipeData.getSteps().get(i).getShortDescription();
-                k++;
-
-            }
-
-
-            verticalStepperForm = view.findViewById(R.id.vertical_stepper_form);
-
-
-            // Setting up and initializing the form
-            VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
-                    .primaryColor(colorPrimary)
-                    .primaryDarkColor(colorPrimaryDark)
-                    .materialDesignInDisabledSteps(true)
-                    .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
-                    .init();
-
-            //setting data to the tiles because this library has issues
-            for(int i = 0; i < mySteps.length; i++) {
-
-                verticalStepperForm.setStepTitle(i, recipeData.getSteps().get(i).getShortDescription());
-
-            }
-
-
-            setupBottomSheet(view);
-
-            changeRecipeButton = view.findViewById(R.id.changeRecipe);
-
-            changeRecipeButton.setOnClickListener(view1 -> {
-
-                //mListener.onRecipeChange(recipeData.getId());
-
-                Toast.makeText(getContext(), recipeData.getId() + " getting recipe id", Toast.LENGTH_SHORT).show();
-
-                //Trying to save the recipe
-                RecipeWidget.selectRecipe(recipeData.getId(), getContext());
-
-            });
-
-
-        }
-
-        else {
-
-            //Error Condition
+            //TODO Error Condition
             //noDetails.setVisibility(View.VISIBLE);
             verticalStepperForm.setVisibility(View.GONE);
 
         }
 
+        return view;
     }
+
+
+
+    private void setupFragment(View view) {
+
+            // this method handles stepper initialization
+            handleStepsInstantiation(view);
+            //this method handles bottom sheet initialization
+            setupBottomSheet(view);
+            //this method handles fragment interactions
+            handleFragmentInteractions(view);
+
+    }
+
+    private void handleStepsInstantiation(View view) {
+
+        mySteps = new String[recipeData.getSteps().size()];
+
+        int k = 0;
+
+        //getting primary colors for stepper
+        int colorPrimary = ContextCompat.getColor(getContext(), R.color.colorPrimary);
+        int colorPrimaryDark = ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorPrimaryDark);
+
+        for (int i = mySteps.length -1; i <= 0; i--) {
+
+            mySteps[k] = recipeData.getSteps().get(i).getShortDescription();
+            k++;
+
+        }
+
+
+        verticalStepperForm = view.findViewById(R.id.vertical_stepper_form);
+
+
+        // Setting up and initializing the form
+        VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
+                .primaryColor(colorPrimary)
+                .primaryDarkColor(colorPrimaryDark)
+                .materialDesignInDisabledSteps(true)
+                .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
+                .init();
+
+        //setting data to the tiles because this library has issues
+        for(int i = 0; i < mySteps.length; i++) {
+
+            verticalStepperForm.setStepTitle(i, recipeData.getSteps().get(i).getShortDescription());
+
+        }
+
+    }
+
+
+    private void handleFragmentInteractions(View view) {
+
+        changeRecipeButton = view.findViewById(R.id.changeRecipe);
+
+        changeRecipeButton.setOnClickListener(view1 -> {
+
+            mListener.onRecipeChange(recipeData.getId());
+
+            Toast.makeText(getContext(), recipeData.getId() + " getting recipe id", Toast.LENGTH_SHORT).show();
+
+            //Trying to save the recipe
+            RecipeWidget.selectRecipe(recipeData.getId(), getContext());
+
+        });
+
+    }
+
 
     private void setupBottomSheet(View view) {
 
@@ -269,6 +283,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         void onFragmentInteraction(int position);
 
-        void onRecipeChange(Integer id);
+        RecipeModel onRecipeChange(Integer id);
     }
 }

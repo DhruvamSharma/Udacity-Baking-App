@@ -6,19 +6,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Ingredients;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.main.MainActivity;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of App Widget functionality.
@@ -40,7 +31,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
 
 
-        ingredientSet = RecipeRepository.getInstance().getRecipeIngredients(modelPosition, context);
+        ingredientSet = RecipeRepository.getInstance().getRecipe(modelPosition, context);
 
         //Toast.makeText(context, ingredientSet, Toast.LENGTH_SHORT).show();
 

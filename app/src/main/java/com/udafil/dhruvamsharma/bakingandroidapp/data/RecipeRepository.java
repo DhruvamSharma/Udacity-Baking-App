@@ -128,7 +128,7 @@ final public class RecipeRepository {
 
     }
 
-    public String getRecipeIngredients(int i, Context context) {
+    public String getRecipe(int i, Context context) {
 
         Set<String> dataSet;
 

@@ -1,6 +1,7 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,7 @@ import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
+import com.udafil.dhruvamsharma.bakingandroidapp.utils.GsonInstance;
 
 import org.parceler.Parcels;
 
@@ -147,32 +149,13 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     }
 
     @Override
-    public void onRecipeChange(Integer id) {
+    public RecipeModel onRecipeChange(Integer id) {
 
-        List<RecipeModel> data = null;
+        RecipeModel model = null;
 
+        model = GsonInstance.getGsonInstance().fromJson(RecipeRepository.getInstance().getRecipe(id, this), RecipeModel.class);
 
-        try {
-            data = RecipeRepository.getInstance().getRecipeData(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (data != null) {
-                for( RecipeModel model : data ) {
-
-                    if (id + 1 == model.getId()) {
-
-                        Intent newIntent = new Intent(this, RecipeDetail.class);
-                        newIntent.putExtra(getPackageName(), Parcels.wrap(model));
-                        newIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(newIntent);
-
-                        break;
-                    }
-
-                }
-            }
+        return model;
 
 
     }

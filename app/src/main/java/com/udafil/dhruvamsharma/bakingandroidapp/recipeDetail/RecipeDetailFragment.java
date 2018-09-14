@@ -2,9 +2,11 @@ package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,12 +21,14 @@ import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
+import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
 import org.parceler.Parcels;
 
 import java.util.Objects;
+import java.util.Set;
 
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
@@ -48,7 +52,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     private LinearLayout layoutBottomSheet;
     private Button peekLayout;
     private BottomSheetBehavior bottomSheetBehavior;
-    private Button changeRecipeButton;
+    private FloatingActionButton changeRecipeButton;
 
     public RecipeDetailFragment() {
         // Required empty public constructor
@@ -145,7 +149,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         peekLayout.setOnClickListener(view12 -> {
 
-
             //Trying to save the recipe
             RecipeWidget.selectRecipe(recipeData.getId(), getContext());
 
@@ -153,9 +156,17 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         changeRecipeButton.setOnClickListener(view1 -> {
 
+            int id = recipeData.getId();
 
-            mListener.onRecipeChange(recipeData.getId()+1);
+            Set<String> recipeStringSet = RecipeRepository.getInstance().getRecipeSet(Objects.requireNonNull(getContext()));
 
+            if (id < recipeStringSet.size()) {
+                id = id+1;
+            } else {
+                id = 1;
+            }
+
+            mListener.onRecipeChange(id);
 
         });
 
@@ -164,7 +175,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     private void setupBottomSheet(View view) {
 
-        layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
+        layoutBottomSheet = view.findViewById(R.id.bottom_layout);
         bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
 
 
@@ -227,8 +238,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     @Override
     public View createStepContentView(int stepNumber) {
 
-
-
         //inflating view from XML file:R.layout.step_layout and setting text to the TextView in it.
         View view = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.stpper_layout, null, false);
         TextView stepShortDescription = view.findViewById(R.id.stepper_description_text_sl);
@@ -257,6 +266,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         return view;
     }
 
+
     @Override
     public void onStepOpening(int stepNumber) {
 
@@ -266,6 +276,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         verticalStepperForm.setActiveStepAsCompleted();
 
     }
+
 
     @Override
     public void sendData() {

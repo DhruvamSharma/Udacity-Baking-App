@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -101,10 +102,24 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
                 descriptionForText.setText(recipeData.getSteps().get(mStepPosition).getDescription());
             }
 
+
+            //This button handles step change procedure
             mChangeStepButton.setOnClickListener(view -> {
 
-                recipeDetailFragment.createStepContentView(1);
-                recipeDetailFragment.onStepOpening(1);
+                if(mStepPosition < recipeData.getSteps().size()-1) {
+
+                    mStepPositionPrevious = mStepPosition;
+                    mStepPosition = mStepPositionPrevious + 1;
+                }
+                else {
+
+                    mStepPosition = 0;
+                    mStepPositionPrevious = -1;
+                }
+
+                Log.e("step position after", mStepPosition+"");
+                releasePlayer();
+                initializePlayer();
 
             });
 

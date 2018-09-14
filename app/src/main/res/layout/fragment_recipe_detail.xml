@@ -17,17 +17,17 @@
         android:src="@drawable/no_food_graphic"
         android:visibility="gone"/> -->
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout
             android:id="@+id/vertical_stepper_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </ScrollView>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Recipe"
+        android:id="@+id/change_btn"/>
 
 
     <!-- Adding bottom sheet after main content -->

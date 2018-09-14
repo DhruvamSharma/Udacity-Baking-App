@@ -8,7 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -43,6 +45,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private TextView descriptionForText;
     private RecipeModel recipeModel;
+    private Button mChangeRecipeStepButton;
+    private int mStepPositionPrevious = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,8 @@ public class DetailActivity extends AppCompatActivity {
         mPlayerView = findViewById(R.id.video_view);
         descriptionForText = findViewById(R.id.description_for_step_tv);
 
+        mChangeRecipeStepButton = findViewById(R.id.chnage_recipe_step_btn);
+
 
         Intent intent = getIntent();
 
@@ -59,9 +65,32 @@ public class DetailActivity extends AppCompatActivity {
             recipeModel = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
             mStepPosition = intent.getIntExtra("position", 0);
 
-            descriptionForText.setText(recipeModel.getSteps().get(mStepPosition).getDescription());
 
             initializePlayer();
+
+            Log.e("step position before", mStepPosition+"");
+
+
+            // This portion of code handles the changing of recipe step
+            mChangeRecipeStepButton.setOnClickListener((view -> {
+
+                if(mStepPosition < recipeModel.getSteps().size()-1) {
+
+                    mStepPositionPrevious = mStepPosition;
+                    mStepPosition = mStepPositionPrevious + 1;
+                }
+                else {
+
+                    mStepPosition = 0;
+                    mStepPositionPrevious = -1;
+                }
+
+                Log.e("step position after", mStepPosition+"");
+                releasePlayer();
+                initializePlayer();
+
+            }));
+
         }
 
 
@@ -71,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializePlayer() {
 
-        if(recipeModel != null && mExoPlayer == null) {
+        if(recipeModel != null && mStepPositionPrevious != mStepPosition) {
 
             TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
 
@@ -86,6 +115,9 @@ public class DetailActivity extends AppCompatActivity {
 
             mExoPlayer.setPlayWhenReady(playWhenReady);
             mExoPlayer.seekTo(windowIndex,playBackPosition);
+
+
+            descriptionForText.setText(recipeModel.getSteps().get(mStepPosition).getDescription());
 
         }
         else {

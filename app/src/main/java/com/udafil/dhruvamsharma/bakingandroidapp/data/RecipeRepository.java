@@ -113,8 +113,6 @@ final public class RecipeRepository {
             RecipeModel recipeModel = model.get(i);
             String json = GsonInstance.getGsonInstance().toJson(recipeModel);
 
-            Toast.makeText(context, json, Toast.LENGTH_SHORT).show();
-
             dataSet.add(json);
 
 
@@ -150,8 +148,6 @@ final public class RecipeRepository {
                 response = iterator.next();
 
                 if(position == i) {
-
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
 
                     break;
                 }

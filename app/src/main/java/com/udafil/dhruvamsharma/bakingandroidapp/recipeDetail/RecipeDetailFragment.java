@@ -46,6 +46,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     private String[] mySteps;
 
     private LinearLayout layoutBottomSheet;
+    private Button peekLayout;
     private BottomSheetBehavior bottomSheetBehavior;
     private Button changeRecipeButton;
 
@@ -122,6 +123,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
+                .showVerticalLineWhenStepsAreCollapsed(true)
                 .materialDesignInDisabledSteps(true)
                 .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
                 .init();
@@ -138,16 +140,22 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
     private void handleFragmentInteractions(View view) {
 
-        changeRecipeButton = view.findViewById(R.id.changeRecipe);
+        changeRecipeButton = view.findViewById(R.id.change_btn);
+        peekLayout = view.findViewById(R.id.changeRecipe);
 
-        changeRecipeButton.setOnClickListener(view1 -> {
+        peekLayout.setOnClickListener(view12 -> {
 
-            mListener.onRecipeChange(recipeData.getId());
-
-            Toast.makeText(getContext(), recipeData.getId() + " getting recipe id", Toast.LENGTH_SHORT).show();
 
             //Trying to save the recipe
             RecipeWidget.selectRecipe(recipeData.getId(), getContext());
+
+        });
+
+        changeRecipeButton.setOnClickListener(view1 -> {
+
+
+            mListener.onRecipeChange(recipeData.getId()+1);
+
 
         });
 
@@ -158,7 +166,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         layoutBottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
-
 
 
         /**
@@ -283,6 +290,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
         void onFragmentInteraction(int position);
 
-        RecipeModel onRecipeChange(Integer id);
+        void onRecipeChange(Integer id);
     }
 }

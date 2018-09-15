@@ -2,27 +2,17 @@ package com.udafil.dhruvamsharma.bakingandroidapp.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.JsonReader;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Ingredients;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.utils.GsonInstance;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +24,7 @@ import java.util.Set;
 final public class RecipeRepository {
 
     private static RecipeRepository sRecipeRepository;
-
+    private List<RecipeModel> model;
 
     private RecipeRepository() {
 
@@ -45,53 +35,35 @@ final public class RecipeRepository {
     /**
      * Reading JSON data from file in stream mode and sending the data to the view models.
      */
-    public List<RecipeModel> getRecipeData(Context context) throws IOException {
-
-        InputStreamReader reader = null;
-        com.google.gson.stream.JsonReader jsonReader = null;
-        List<RecipeModel> model = new ArrayList<>();
+    public void getRecipeData(Context context) throws IOException {
 
 
-        try {
-            reader = new InputStreamReader(context.getAssets().open("recipe.json"), "UTF-8");
-            Gson gson = GsonInstance.getGsonInstance();
+        //initializing FAN library for network requests
+        AndroidNetworking.initialize(context);
 
-            jsonReader = new com.google.gson.stream.JsonReader(reader);
-            jsonReader.beginArray();
-            RecipeModel recipeModel;
-            while( jsonReader.hasNext() ) {
-                recipeModel = gson.fromJson(jsonReader, RecipeModel.class);
-                model.add( recipeModel );
+        AndroidNetworking.get(context.getResources().getString(R.string.recipe_list_url))
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsObjectList(RecipeModel.class, new ParsedRequestListener<List<RecipeModel>>() {
+                    @Override
+                    public void onResponse(List<RecipeModel> response) {
 
-            }
+                        //Toast.makeText(context, response.get(0).getIngredients().get(0).getIngredient() + "here ", Toast.LENGTH_SHORT).show();
 
+                        //method to set the response to the list because final variable couldn't do much!
+                        setValue(response);
+                        storeRecipeDataInFile(context, response);
 
-            jsonReader.endArray();
+                    }
 
-        }
-        catch (IllegalStateException | JsonSyntaxException exception) {
-            return null;
-        }
-        catch (UnsupportedEncodingException ex) {
-            return null;
-        }
+                    @Override
+                    public void onError(ANError anError) {
 
-        catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        finally {
-            if (reader != null && jsonReader != null) {
-                reader.close();
-                jsonReader.close();
-
-                storeRecipeDataInFile(context, model);
-            }
-        }
+                    }
+                });
 
 
-        return model;
+
 
     }
 
@@ -189,7 +161,7 @@ final public class RecipeRepository {
     }
 
 
-
-
-
+    public void setValue(List<RecipeModel> value) {
+        this.model = value;
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
@@ -45,7 +46,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private TextView descriptionForText;
     private RecipeModel recipeModel;
-    private Button mChangeRecipeStepButton;
+    private FloatingActionButton mChangeRecipeStepButton;
     private int mStepPositionPrevious = -1;
 
     @Override

@@ -64,4 +64,7 @@ dependencies {
     /* Material Design Stepper */
     implementation 'com.ernestoyaquello.stepperform:vertical-stepper-form:0.9.9'
 
+    /* Fast Android Networking Library */
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+
 }

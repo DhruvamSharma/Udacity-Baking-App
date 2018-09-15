@@ -1,13 +1,9 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.data.model;
 
 import java.util.List;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Ingredients;
-import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Step;
 
 @org.parceler.Parcel
 public class RecipeModel
@@ -21,45 +17,16 @@ public class RecipeModel
     private String name;
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredients> ingredients = null;
+    private List<Ingredient> ingredients = null;
     @SerializedName("steps")
     @Expose
-    public List<Step> steps = null;
+    private List<Step> steps = null;
     @SerializedName("servings")
     @Expose
-    public Integer servings;
+    private Integer servings;
     @SerializedName("image")
     @Expose
-    public String image;
-
-
-
-
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public RecipeModel() {
-    }
-
-    /**
-     *
-     * @param ingredients
-     * @param id
-     * @param servings
-     * @param name
-     * @param image
-     * @param steps
-     */
-    public RecipeModel(Integer id, String name, List<Ingredients> ingredients, List<Step> steps, Integer servings, String image) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.ingredients = ingredients;
-        this.steps = steps;
-        this.servings = servings;
-        this.image = image;
-    }
+    private String image;
 
     public Integer getId() {
         return id;
@@ -77,11 +44,11 @@ public class RecipeModel
         this.name = name;
     }
 
-    public List<Ingredients> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredients> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -108,7 +75,5 @@ public class RecipeModel
     public void setImage(String image) {
         this.image = image;
     }
-
-
 
 }

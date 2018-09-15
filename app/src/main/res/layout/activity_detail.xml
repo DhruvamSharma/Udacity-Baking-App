@@ -30,10 +30,14 @@
         app:layout_constraintStart_toStartOf="@id/video_view"
         app:layout_constraintTop_toBottomOf="@id/video_view"/>
 
-    <Button
+    <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="change step"
-        android:id="@+id/chnage_recipe_step_btn"/>
+        android:id="@+id/chnage_recipe_step_btn"
+        android:layout_margin="32dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

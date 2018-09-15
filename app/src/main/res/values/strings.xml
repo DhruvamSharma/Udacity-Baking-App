@@ -8,4 +8,6 @@
 
     <string name="RECIPE_DATA_PREFERENCE_FILE">@string/package_name</string>
     <string name="recipe_ingredients">RecipeIngredtients</string>
+
+    <string name="recipe_list_url">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
 </resources>

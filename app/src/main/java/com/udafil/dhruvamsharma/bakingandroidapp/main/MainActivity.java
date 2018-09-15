@@ -77,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
         binding.mainRecipeListRv.setLayoutManager(manager);
 
 
-
-
-
-
-
     }
 
 

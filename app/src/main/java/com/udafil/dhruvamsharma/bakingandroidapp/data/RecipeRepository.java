@@ -126,7 +126,7 @@ final public class RecipeRepository {
 
     }
 
-    public String getRecipe(int i, Context context) {
+    public String getRecipe(int modelPosition, Context context) {
 
         Set<String> dataSet;
 
@@ -147,7 +147,7 @@ final public class RecipeRepository {
 
                 response = iterator.next();
 
-                if(position == i) {
+                if(position == modelPosition) {
 
                     break;
                 }
@@ -159,6 +159,18 @@ final public class RecipeRepository {
 
 
         return response;
+
+    }
+
+    public Set<String> getRecipeSet(Context context) {
+
+
+        Set<String> dataSet;
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.RECIPE_DATA_PREFERENCE_FILE), Context.MODE_PRIVATE);
+        dataSet = sharedPreferences.getStringSet(context.getString(R.string.recipe_ingredients), null);
+
+        return dataSet;
 
     }
 

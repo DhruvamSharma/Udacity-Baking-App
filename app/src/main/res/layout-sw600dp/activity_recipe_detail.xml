@@ -37,7 +37,7 @@
             android:layout_height="400dp"
             android:id="@+id/no_video_image_iv"
             android:visibility="gone"
-            android:src="@drawable/no_food_graphic"
+            android:src="@drawable/no_food_image"
 
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
@@ -58,14 +58,22 @@
             tools:text="Thsi sis here"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
 
-            app:layout_constraintStart_toStartOf="@id/video_view"
-            app:layout_constraintTop_toBottomOf="@id/video_view"/>
+            app:layout_constraintBottom_toTopOf="@id/change_recipe_step_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="64dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Change Recipe Step"
-            android:id="@+id/change_recipe_step_btn"/>
+            android:id="@+id/change_recipe_step_btn"
+
+            android:src="@android:drawable/ic_media_next"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="32dp"/>
 
     </android.support.constraint.ConstraintLayout>
 

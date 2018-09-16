@@ -44,7 +44,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
 
         TextView mTitle;
-        TextView mDescription;
         TextView mServings;
         CardView viewHolderMainCV;
 
@@ -52,7 +51,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             super(itemView);
 
             mTitle = itemView.findViewById(R.id.view_holder_main_title_tv);
-            mDescription = itemView.findViewById(R.id.view_holder_main_desc_tv);
             mServings = itemView.findViewById(R.id.view_holder_main_servings_tv);
             viewHolderMainCV = itemView.findViewById(R.id.view_holder_main_cv);
 
@@ -88,7 +86,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
 
         holder.mTitle.setText(recipeModel.get(position).getName());
-        holder.mDescription.setText("Id: " + recipeModel.get(position).getId());
         holder.mServings.setText("Servings: " + recipeModel.get(position).getServings());
     }
 

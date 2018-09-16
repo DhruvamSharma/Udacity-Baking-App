@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
+import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Ingredient;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 
@@ -94,12 +96,37 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             TextView textView = view.findViewById(R.id.recipe_heading_tv);
             textView.setText(recipeData.getName());
 
+            //This method formats the recipe data for ingredient list.
+            setupIngredientsList(view);
+
             // this method handles stepper initialization
             handleStepsInstantiation(view);
             //this method handles bottom sheet initialization
             setupBottomSheet(view);
             //this method handles fragment interactions
             handleFragmentInteractions(view);
+
+    }
+
+    private void setupIngredientsList(View view) {
+
+       TextView textView =  view.findViewById(R.id.ingredient_list_tv);
+
+       StringBuilder buffer = new StringBuilder();
+
+       for(Ingredient ingredient : recipeData.getIngredients()) {
+
+           buffer.append(ingredient.getQuantity())
+                   .append(" ")
+                   .append(ingredient.getMeasure())
+                   .append(" of ")
+                   .append(ingredient.getIngredient())
+                   .append("\n");
+
+       }
+
+       textView.setText(buffer);
+
 
     }
 
@@ -152,6 +179,8 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
             //Trying to save the recipe
             RecipeWidget.selectRecipe(recipeData.getId(), getContext());
+
+            Toast.makeText(view.getContext(), "Reipe Saved", Toast.LENGTH_SHORT).show();
 
         });
 
@@ -242,7 +271,7 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         //inflating view from XML file:R.layout.step_layout and setting text to the TextView in it.
         View view = LayoutInflater.from(getActivity().getApplicationContext()).inflate(R.layout.stpper_layout, null, false);
         TextView stepShortDescription = view.findViewById(R.id.stepper_description_text_sl);
-        stepShortDescription.setText(recipeData.getSteps().get(stepNumber).getShortDescription());
+        stepShortDescription.setText("Click here to see the step detail");
 
         if(mTwoPane) {
             //code for tablet layout

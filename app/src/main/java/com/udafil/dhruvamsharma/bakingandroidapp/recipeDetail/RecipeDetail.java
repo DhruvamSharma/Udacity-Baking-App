@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     private Intent intent;
     private ImageView mNoFoodImage;
     private TextView descriptionForText;
-    private Button mChangeStepButton;
+    private FloatingActionButton mChangeStepButton;
 
     private PlayerView mPlayerView;
     private SimpleExoPlayer mExoPlayer;

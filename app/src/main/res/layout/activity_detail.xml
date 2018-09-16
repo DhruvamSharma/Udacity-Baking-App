@@ -4,12 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/recipe_detail_constraint_layout_phone"
     tools:context=".detail.DetailActivity">
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/no_video_image_detail_iv"
+        android:visibility="gone"
+        android:src="@drawable/no_food_image"
+
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -27,8 +45,10 @@
         android:layout_marginTop="16dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
 
-        app:layout_constraintStart_toStartOf="@id/video_view"
-        app:layout_constraintTop_toBottomOf="@id/video_view"/>
+        app:layout_constraintBottom_toTopOf="@id/chnage_recipe_step_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -37,7 +57,12 @@
         android:id="@+id/chnage_recipe_step_btn"
         android:layout_margin="32dp"
 
+        android:src="@android:drawable/ic_media_next"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
 
 </android.support.constraint.ConstraintLayout>

@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +52,9 @@ public class DetailActivity extends AppCompatActivity {
     private RecipeModel recipeModel;
     private FloatingActionButton mChangeRecipeStepButton;
     private int mStepPositionPrevious = -1;
+    private ImageView mNoFoodImage;
+
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +65,7 @@ public class DetailActivity extends AppCompatActivity {
         descriptionForText = findViewById(R.id.description_for_step_tv);
 
         mChangeRecipeStepButton = findViewById(R.id.chnage_recipe_step_btn);
-
+        constraintLayout = findViewById(R.id.recipe_detail_constraint_layout_phone);
 
         Intent intent = getIntent();
 
@@ -66,6 +73,7 @@ public class DetailActivity extends AppCompatActivity {
             recipeModel = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
             mStepPosition = intent.getIntExtra("position", 0);
 
+            mNoFoodImage = findViewById(R.id.no_video_image_detail_iv);
 
             initializePlayer();
 
@@ -112,10 +120,32 @@ public class DetailActivity extends AppCompatActivity {
             mPlayerView.setPlayer(mExoPlayer);
 
             MediaSource mediaSource = buildMediaSource();
-            mExoPlayer.prepare(mediaSource, true, false);
 
-            mExoPlayer.setPlayWhenReady(playWhenReady);
-            mExoPlayer.seekTo(windowIndex,playBackPosition);
+            /** TODO
+             * Dynamically create constraints depending upon the wether the video is there or not!
+             *
+             **/
+
+
+            if( mediaSource == null ) {
+
+                mPlayerView.setVisibility(View.GONE);
+                mNoFoodImage.setVisibility(View.VISIBLE);
+
+
+            } else {
+
+                mPlayerView.setVisibility(View.VISIBLE);
+                mNoFoodImage.setVisibility(View.GONE);
+
+
+
+
+                mExoPlayer.prepare(mediaSource, true, false);
+
+                mExoPlayer.setPlayWhenReady(playWhenReady);
+                mExoPlayer.seekTo(windowIndex,playBackPosition);
+            }
 
 
             descriptionForText.setText(recipeModel.getSteps().get(mStepPosition).getDescription());
@@ -130,6 +160,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private MediaSource buildMediaSource() {
+
+        if (recipeModel.getSteps().get(mStepPosition).getVideoURL().equals("")) {
+            return null;
+        }
 
         Uri uri = Uri.parse(recipeModel.getSteps().get(mStepPosition).getVideoURL());
 

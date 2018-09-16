@@ -11,5 +11,4 @@
         android:id="@+id/recipe_detail_fm" />
 
 
-
 </FrameLayout>

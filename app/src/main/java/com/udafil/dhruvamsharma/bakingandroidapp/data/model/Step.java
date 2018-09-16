@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 *This class is a POJO class to serialize and deserialize the JSON Objects.
 *This class stores the steps of the recipie.
 */
-public class Step implements Parcelable
-{
 
-    @SerializedName("id")
+@org.parceler.Parcel
+public class Step {
+
     @Expose
     private Integer id;
     @SerializedName("shortDescription")
@@ -28,54 +28,6 @@ public class Step implements Parcelable
     @SerializedName("thumbnailURL")
     @Expose
     private String thumbnailURL;
-    public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Step createFromParcel(Parcel in) {
-            return new Step(in);
-        }
-
-        public Step[] newArray(int size) {
-            return (new Step[size]);
-        }
-
-    }
-            ;
-
-    protected Step(Parcel in) {
-        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.shortDescription = ((String) in.readValue((String.class.getClassLoader())));
-        this.description = ((String) in.readValue((String.class.getClassLoader())));
-        this.videoURL = ((String) in.readValue((String.class.getClassLoader())));
-        this.thumbnailURL = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Step() {
-    }
-
-    /**
-     *
-     * @param id
-     * @param shortDescription
-     * @param description
-     * @param videoURL
-     * @param thumbnailURL
-     */
-    public Step(Integer id, String shortDescription, String description, String videoURL, String thumbnailURL) {
-        super();
-        this.id = id;
-        this.shortDescription = shortDescription;
-        this.description = description;
-        this.videoURL = videoURL;
-        this.thumbnailURL = thumbnailURL;
-    }
 
     public Integer getId() {
         return id;
@@ -117,17 +69,5 @@ public class Step implements Parcelable
         this.thumbnailURL = thumbnailURL;
     }
 
-
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(id);
-        dest.writeValue(shortDescription);
-        dest.writeValue(description);
-        dest.writeValue(videoURL);
-        dest.writeValue(thumbnailURL);
-    }
-
-    public int describeContents() {
-        return 0;
-    }
 
 }

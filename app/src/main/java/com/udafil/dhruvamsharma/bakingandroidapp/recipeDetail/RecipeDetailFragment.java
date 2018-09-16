@@ -2,7 +2,6 @@ package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
@@ -92,6 +90,9 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
 
 
     private void setupFragment(View view) {
+
+            TextView textView = view.findViewById(R.id.recipe_heading_tv);
+            textView.setText(recipeData.getName());
 
             // this method handles stepper initialization
             handleStepsInstantiation(view);

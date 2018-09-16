@@ -6,10 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
+import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.main.MainActivity;
+import com.udafil.dhruvamsharma.bakingandroidapp.utils.GsonInstance;
 
 /**
  * Implementation of App Widget functionality.
@@ -24,20 +27,22 @@ public class RecipeWidget extends AppWidgetProvider {
                                 int appWidgetId, int modelPosition) {
 
         StringBuffer widgetText = new StringBuffer();
-        String ingredientSet = null;
+        RecipeModel ingredientSet = null;
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
+        // Set cut corner background for API 23+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            views.setInt( R.id.widget_background,"setBackgroundResource", R.drawable.widget_shape);
+        }
 
+        ingredientSet = GsonInstance.getGsonInstance().fromJson(RecipeRepository.getInstance().getRecipe(modelPosition, context), RecipeModel.class);
 
-        ingredientSet = RecipeRepository.getInstance().getRecipe(modelPosition, context);
-
-        //Toast.makeText(context, ingredientSet, Toast.LENGTH_SHORT).show();
 
         if (ingredientSet != null) {
 
-            widgetText.append(ingredientSet);
+            widgetText.append(ingredientSet.getIngredients().get(0).getIngredient());
 
         } else {
             //TODO handle error conditions

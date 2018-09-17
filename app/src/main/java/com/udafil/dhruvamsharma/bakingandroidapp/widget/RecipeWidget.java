@@ -1,4 +1,4 @@
-package com.udafil.dhruvamsharma.bakingandroidapp;
+package com.udafil.dhruvamsharma.bakingandroidapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,9 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.widget.RemoteViews;
 
+import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.main.MainActivity;
@@ -29,8 +31,16 @@ public class RecipeWidget extends AppWidgetProvider {
         StringBuffer widgetText = new StringBuffer();
         RecipeModel ingredientSet = null;
 
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        intent.putExtra("RECIPE NUMBER", modelPosition);
+
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+
+        views.setRemoteAdapter(R.id.widget_list_lv, intent);
 
         // Set cut corner background for API 23+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -48,10 +58,10 @@ public class RecipeWidget extends AppWidgetProvider {
             //TODO handle error conditions
         }
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Intent startActivityIntent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, startActivityIntent, 0);
 
-        views.setOnClickPendingIntent( R.id.appwidget_text, pendingIntent);
+        views.setOnClickPendingIntent( R.id.open_recipe_app_btn, pendingIntent);
 
 
         views.setTextViewText(R.id.appwidget_text, widgetText);
@@ -88,6 +98,14 @@ public class RecipeWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, i);
         }
+
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        //handles broadcast messages to the receiver.
 
     }
 }

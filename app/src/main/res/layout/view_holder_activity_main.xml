@@ -45,18 +45,10 @@
                     android:id="@+id/view_holder_main_view"
 
                     app:layout_constraintStart_toStartOf="@id/view_holder_main_title_tv"
-                    app:layout_constraintBottom_toTopOf="@id/view_holder_main_desc_tv"/>
+                    app:layout_constraintBottom_toTopOf="@id/view_holder_main_servings_tv"/>
 
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_holder_main_desc_tv"
-                    tools:text="@string/app_name"
-
-                    app:layout_constraintBottom_toTopOf="@id/view_holder_main_servings_tv"
-                    app:layout_constraintStart_toStartOf="@id/view_holder_main_title_tv" />
 
                 <TextView
                     android:id="@+id/view_holder_main_servings_tv"

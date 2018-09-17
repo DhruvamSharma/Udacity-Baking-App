@@ -28,7 +28,7 @@
             android:name=".recipeDetail.RecipeDetail"
             android:launchMode="singleTop" />
 
-        <receiver android:name=".RecipeWidget">
+        <receiver android:name=".widget.RecipeWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -37,6 +37,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/recipe_widget_info" />
         </receiver>
+
+        <!-- 2. The service that will send our collection data to our widget. It needs the
+               permission android.permission.BIND_REMOTEVIEWS -->
+        <service android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

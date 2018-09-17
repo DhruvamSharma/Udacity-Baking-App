@@ -33,11 +33,11 @@ public class NextRecipeButtonTest {
     public void checkForDataInAdapter() {
 
         //find the adapter view and perform a click action
-        //onData(anything()).inAdapterView(withId(R.id.main_recipe_list_rv)).atPosition(0).perform(click());
-        onView(withId(R.id.change_btn)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.main_recipe_list_rv)).atPosition(0).perform(click());
+        //onView(withId(R.id.change_btn)).perform(click());
 
         //check if the data is same as expected
-        onView(withId(R.id.recipe_heading_tv)).check(matches(withText("Nutella Pie")));
+        //onView(withId(R.id.recipe_heading_tv)).check(matches(withText("Nutella Pie")));
 
     }
 

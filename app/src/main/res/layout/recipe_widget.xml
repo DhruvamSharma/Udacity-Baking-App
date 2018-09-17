@@ -19,7 +19,8 @@
         android:textSize="24sp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        android:layout_alignParentRight="true" />
 
     <ListView
         android:id="@+id/widget_list_lv"

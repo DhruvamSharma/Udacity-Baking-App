@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
-import com.udafil.dhruvamsharma.bakingandroidapp.RecipeWidget;
+import com.udafil.dhruvamsharma.bakingandroidapp.widget.RecipeWidget;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.Ingredient;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;

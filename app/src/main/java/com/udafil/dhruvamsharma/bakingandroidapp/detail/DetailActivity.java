@@ -1,6 +1,10 @@
 package com.udafil.dhruvamsharma.bakingandroidapp.detail;
 
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -41,75 +45,120 @@ public class DetailActivity extends AppCompatActivity {
 
     private PlayerView mPlayerView;
     private SimpleExoPlayer mExoPlayer;
-    private int mStepPosition;
 
-    private static int windowIndex = 0;
-    private static long playBackPosition = 0;
-    private static boolean playWhenReady = true;
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
     private TextView descriptionForText;
-    private RecipeModel recipeModel;
     private FloatingActionButton mChangeRecipeStepButton;
-    private int mStepPositionPrevious = -1;
     private ImageView mNoFoodImage;
 
-    private ConstraintLayout constraintLayout;
+    private ImageView mFullScreenIcon;
+
+    private DetailActivityViewModel mDetailActivityViewModel;
+
+
+    /*** TODO
+     * Handle the small member variable data in onSaveInstanceState or View Models in almost every activity.
+     * @param savedInstanceState
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mPlayerView = findViewById(R.id.video_view);
-        descriptionForText = findViewById(R.id.description_for_step_tv);
+       //Getting the instance of View Model for This activity
+        mDetailActivityViewModel = ViewModelProviders.of(this).get(DetailActivityViewModel.class);
 
-        mChangeRecipeStepButton = findViewById(R.id.chnage_recipe_step_btn);
-        constraintLayout = findViewById(R.id.recipe_detail_constraint_layout_phone);
-
+        //Getting intent from Recipe Detail Activity
         Intent intent = getIntent();
 
-        if(intent.hasExtra(getPackageName()) && intent.hasExtra("position")) {
-            recipeModel = Parcels.unwrap(intent.getParcelableExtra(getPackageName()));
-            mStepPosition = intent.getIntExtra("position", 0);
+        if(intent.hasExtra(getPackageName()) && intent.hasExtra("position") && savedInstanceState == null) {
 
-            mNoFoodImage = findViewById(R.id.no_video_image_detail_iv);
-
-            initializePlayer();
-
-            Log.e("step position before", mStepPosition+"");
-
-
-            // This portion of code handles the changing of recipe step
-            mChangeRecipeStepButton.setOnClickListener((view -> {
-
-                if(mStepPosition < recipeModel.getSteps().size()-1) {
-
-                    mStepPositionPrevious = mStepPosition;
-                    mStepPosition = mStepPositionPrevious + 1;
-                }
-                else {
-
-                    mStepPosition = 0;
-                    mStepPositionPrevious = -1;
-                }
-
-                Log.e("step position after", mStepPosition+"");
-                releasePlayer();
-                initializePlayer();
-
-            }));
+            //setting data for the view model
+            mDetailActivityViewModel.setStepPosition(
+                    intent.getIntExtra("position", 0));
+            mDetailActivityViewModel.setRecipeModel(
+                    Parcels.unwrap(intent.getParcelableExtra(getPackageName())));
 
         }
 
+        setUpActivity();
 
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        //outState.putBoolean("isPlaying", mDetailActivityViewModel.isPlayWhenReady());
+
+    }
+
+    /**
+     * This method takes care of setting up the activity
+     */
+    private void setUpActivity() {
+
+        mNoFoodImage = findViewById(R.id.no_video_image_detail_iv);
+
+        mPlayerView = findViewById(R.id.video_view);
+        descriptionForText = findViewById(R.id.description_for_step_tv);
+
+        mChangeRecipeStepButton = findViewById(R.id.chnage_recipe_step_btn);
+        mFullScreenIcon = mPlayerView.findViewById(R.id.exo_fullscreen_icon);
+
+
+        handleActivityInteractions();
+
+    }
+
+
+    /**
+     * This method handles all the interactions happening inside the activity
+     */
+    private void handleActivityInteractions() {
+
+        mFullScreenIcon.setOnClickListener(view -> {
+
+            toggleFullScreen();
+
+        });
+
+
+        // This portion of code handles the changing of recipe step
+        mChangeRecipeStepButton.setOnClickListener((view -> {
+
+            if(mDetailActivityViewModel.getStepPosition() < mDetailActivityViewModel.getRecipeModel().getSteps().size()-1) {
+
+                mDetailActivityViewModel.setmStepPositionPrevious(mDetailActivityViewModel.getStepPosition());
+                mDetailActivityViewModel.setStepPosition(mDetailActivityViewModel.getmStepPositionPrevious() + 1);
+            }
+            else {
+
+                mDetailActivityViewModel.setStepPosition(0);
+                mDetailActivityViewModel.setmStepPositionPrevious(-1);
+            }
+
+            Log.e("step position after", mDetailActivityViewModel.getStepPosition()+"");
+            releasePlayer();
+            initializePlayer();
+
+
+
+        }));
+
+    }
+
+
+    /**
+     * This method initializes the exo player as and when required
+     */
     private void initializePlayer() {
 
-        if(recipeModel != null && mStepPositionPrevious != mStepPosition) {
+        if(mDetailActivityViewModel.getRecipeModel() != null && mDetailActivityViewModel.getmStepPositionPrevious() != mDetailActivityViewModel.getStepPosition()) {
 
             TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
 
@@ -121,8 +170,10 @@ public class DetailActivity extends AppCompatActivity {
 
             MediaSource mediaSource = buildMediaSource();
 
+            mDetailActivityViewModel.setPlayWhenReady(true);
+
             /** TODO
-             * Dynamically create constraints depending upon the wether the video is there or not!
+             * Dynamically create constraints depending upon the whether the video is there or not!
              *
              **/
 
@@ -138,34 +189,36 @@ public class DetailActivity extends AppCompatActivity {
                 mPlayerView.setVisibility(View.VISIBLE);
                 mNoFoodImage.setVisibility(View.GONE);
 
-
-
-
                 mExoPlayer.prepare(mediaSource, true, false);
 
-                mExoPlayer.setPlayWhenReady(playWhenReady);
-                mExoPlayer.seekTo(windowIndex,playBackPosition);
+                mExoPlayer.setPlayWhenReady(mDetailActivityViewModel.isPlayWhenReady());
+                mExoPlayer.seekTo(mDetailActivityViewModel.getWindowIndex(),mDetailActivityViewModel.getPlayBackPosition());
             }
 
 
-            descriptionForText.setText(recipeModel.getSteps().get(mStepPosition).getDescription());
+            descriptionForText.setText(mDetailActivityViewModel.getRecipeModel().getSteps().get(mDetailActivityViewModel.getStepPosition()).getDescription());
 
         }
         else {
             //TODO handle error condition
+
         }
 
 
 
     }
 
+    /**
+     * his method is called by initializePlayer method and returns a Media source
+     * @return
+     */
     private MediaSource buildMediaSource() {
 
-        if (recipeModel.getSteps().get(mStepPosition).getVideoURL().equals("")) {
+        if (mDetailActivityViewModel.getRecipeModel().getSteps().get(mDetailActivityViewModel.getStepPosition()).getVideoURL().equals("")) {
             return null;
         }
 
-        Uri uri = Uri.parse(recipeModel.getSteps().get(mStepPosition).getVideoURL());
+        Uri uri = Uri.parse(mDetailActivityViewModel.getRecipeModel().getSteps().get(mDetailActivityViewModel.getStepPosition()).getVideoURL());
 
         return new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory(Util.getUserAgent(this, getResources().getString(R.string.app_name)))).
@@ -176,16 +229,51 @@ public class DetailActivity extends AppCompatActivity {
 
 
     /**
+     * Toggle full screen in phones
+     */
+    private void toggleFullScreen() {
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mFullScreenIcon.setImageResource(R.drawable.ic_fullscreen_skrink);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mFullScreenIcon.setImageResource(R.drawable.ic_fullscreen_expand);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(getResources().getConfiguration().orientation == newConfig.orientation) {
+
+        } else {
+
+        }
+
+    }
+
+    /**
      * Capturing the playback position, playWhenReady and windowIndex when teh app goes offScreen
      * and releasing the shared resources.
      */
     private void releasePlayer() {
         if (mExoPlayer != null) {
-            playBackPosition = mExoPlayer.getCurrentPosition();
-            windowIndex = mExoPlayer.getCurrentWindowIndex();
-            playWhenReady = mExoPlayer.getPlayWhenReady();
+
+            mDetailActivityViewModel.setPlayBackPosition(mExoPlayer.getCurrentPosition());
+            mDetailActivityViewModel.setPlayWhenReady(false);
+            mDetailActivityViewModel.setWindowIndex(mExoPlayer.getCurrentWindowIndex());
+
+            mDetailActivityViewModel.setmStepPositionPrevious(mDetailActivityViewModel.getmStepPositionPrevious());
+            mDetailActivityViewModel.setStepPosition(mDetailActivityViewModel.getStepPosition());
+
+            //Toast.makeText(getApplicationContext(), mDetailActivityViewModel.getStepPosition()+" in release", Toast.LENGTH_SHORT).show();
+
+
             mExoPlayer.release();
             mExoPlayer = null;
+
         }
     }
 
@@ -194,7 +282,7 @@ public class DetailActivity extends AppCompatActivity {
 
     /**
      * Handling releasing player nd codecs properly and gaining them as soon as in onStart.
-     * Since API 24, Multiwindow concept came into play soinitializing the player in onStart rather than in onResume
+     * Since API 24, Multiwindow concept came into play so initializing the player in onStart rather than in onResume
      */
     @Override
     public void onStart() {
@@ -210,9 +298,20 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        hideSystemUi();
         if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
             initializePlayer();
         }
+    }
+
+    @SuppressLint("InlinedApi")
+    private void hideSystemUi() {
+        mPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     /**
@@ -237,13 +336,11 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        playBackPosition = 0;
-        windowIndex = 0;
-
         finish();
     }
 }

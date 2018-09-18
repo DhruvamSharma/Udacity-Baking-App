@@ -202,12 +202,12 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
             MediaSource mediaSource = buildMediaSource();
 
             if( mediaSource == null ) {
-                mPlayerView.setVisibility(View.GONE);
+                mPlayerView.setVisibility(View.INVISIBLE);
                 mNoFoodImage.setVisibility(View.VISIBLE);
 
             } else {
                 mPlayerView.setVisibility(View.VISIBLE);
-                mNoFoodImage.setVisibility(View.GONE);
+                mNoFoodImage.setVisibility(View.INVISIBLE);
                 mExoPlayer.prepare(mediaSource, true, false);
 
                 mExoPlayer.setPlayWhenReady(playWhenReady);

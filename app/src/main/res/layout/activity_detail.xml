@@ -11,12 +11,7 @@
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        app:controller_layout_id="@layout/custom_playback_control"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,8 +40,8 @@
         android:layout_marginTop="16dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
 
-        app:layout_constraintBottom_toTopOf="@id/chnage_recipe_step_btn"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/video_view"
+        app:layout_constraintStart_toStartOf="@id/video_view"
         android:layout_marginBottom="64dp"
         app:layout_constraintEnd_toEndOf="parent"/>
 

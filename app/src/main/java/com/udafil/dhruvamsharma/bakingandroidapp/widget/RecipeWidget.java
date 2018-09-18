@@ -52,7 +52,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
         if (ingredientSet != null) {
 
-            widgetText.append(ingredientSet.getIngredients().get(0).getIngredient());
+            widgetText.append(ingredientSet.getName());
 
         } else {
             //TODO handle error conditions

@@ -68,4 +68,8 @@ dependencies {
     /* Fast Android Networking Library */
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
 
+    // https://mvnrepository.com/artifact/com.android.support.test.espresso/espresso-idling-resource
+    implementation group: 'com.android.support.test.espresso', name: 'espresso-idling-resource', version: '3.0.2'
+
+
 }

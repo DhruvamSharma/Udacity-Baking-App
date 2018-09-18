@@ -5,27 +5,34 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.widget.Toast;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
 import com.udafil.dhruvamsharma.bakingandroidapp.databinding.ActivityMainBinding;
+import com.udafil.dhruvamsharma.bakingandroidapp.main.IdlingResource.RecipeIdlingResource;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MessageDelayer.DelayerCallback{
 
     private MainActivityViewModel viewModel;
     private RecipeListAdapter mAdapter;
     private ActivityMainBinding binding;
 
-
+    // The Idling Resource which will be null in production.
+    @Nullable private RecipeIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupActivity() {
 
+        MessageDelayer.processMessage("hi", this, mIdlingResource, this);
+
         //Getting data from the view model
         List<RecipeModel> recipeData = viewModel.getRecipeData();
 
@@ -90,4 +99,22 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setReenterTransition(slide);
     }
 
+    @Override
+    public void onDone(List<RecipeModel> recipeModel) {
+
+        Toast.makeText(this, "done",Toast.LENGTH_SHORT).show();
+
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link RecipeIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new RecipeIdlingResource();
+        }
+        return mIdlingResource;
+    }
 }

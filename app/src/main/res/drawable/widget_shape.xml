@@ -16,6 +16,7 @@
                     android:centerX="0.6"
                     android:endColor="#44000000"
                     android:startColor="#00000000" />
+                <stroke android:width="5px" android:color="@color/colorAccent" />
             </shape>
         </rotate>
     </item>
@@ -30,7 +31,8 @@
             android:pivotX="50%"
             android:pivotY="100%">
             <shape>
-                <solid android:color="@color/poloBlue" />
+                <solid android:color="@color/colorAccent" />
+                <stroke android:width="5px" android:color="@color/colorAccent" />
             </shape>
         </rotate>
     </item>
@@ -47,6 +49,7 @@
                 android:centerX="0.6"
                 android:endColor="#44000000"
                 android:startColor="#00000000" />
+            <stroke android:width="5px" android:color="@color/colorAccent" />
         </shape>
     </item>
 
@@ -56,7 +59,8 @@
         android:left="29.5dp"
         android:top="3.5dp">
         <shape>
-            <solid android:color="@color/poloBlue" />
+            <solid android:color="@color/ghostWhite" />
+            <stroke android:width="5px" android:color="@color/colorAccent" />
         </shape>
     </item>
 
@@ -65,7 +69,7 @@
         android:height="1000dp"
         android:top="33dp">
         <shape>
-            <solid android:color="@color/poloBlue" />
+            <solid android:color="@color/ghostWhite" />
         </shape>
     </item>
 

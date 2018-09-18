@@ -15,11 +15,11 @@
         android:fontFamily="@font/noto_sans"
         android:contentDescription="@string/appwidget_text"
         android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         android:layout_alignParentRight="true" />
 
     <ListView

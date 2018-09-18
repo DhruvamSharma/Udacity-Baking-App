@@ -7,7 +7,7 @@
         android:id="@+id/widget_single_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/ghostWhite"
+        android:textColor="@android:color/black"
         android:layout_margin="16dp"
         android:fontFamily="@font/noto_sans"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>

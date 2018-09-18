@@ -13,11 +13,14 @@ import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,7 +114,44 @@ public class DetailActivity extends AppCompatActivity {
         mFullScreenIcon = mPlayerView.findViewById(R.id.exo_fullscreen_icon);
 
 
+        //This method checks if the phone is in portrait or landscape mode
+        setPortraitOrLandscapeConfigurations();
+
+
         handleActivityInteractions();
+
+    }
+
+    private void setPortraitOrLandscapeConfigurations() {
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mFullScreenIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_skrink));
+
+            mChangeRecipeStepButton.setVisibility(View.GONE);
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+            //Set the playerView to full screen width and height
+            android.view.ViewGroup.LayoutParams params = mPlayerView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            mPlayerView.setLayoutParams(params);
+
+
+
+        } else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            mChangeRecipeStepButton.setVisibility(View.VISIBLE);
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+            //Set the playerView to full screen width and height
+            android.view.ViewGroup.LayoutParams params = mPlayerView.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = 800;
+            mPlayerView.setLayoutParams(params);
+
+
+            mFullScreenIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_fullscreen_expand));
+        }
 
     }
 
@@ -180,14 +220,14 @@ public class DetailActivity extends AppCompatActivity {
 
             if( mediaSource == null ) {
 
-                mPlayerView.setVisibility(View.GONE);
+                mPlayerView.setVisibility(View.INVISIBLE);
                 mNoFoodImage.setVisibility(View.VISIBLE);
 
 
             } else {
 
                 mPlayerView.setVisibility(View.VISIBLE);
-                mNoFoodImage.setVisibility(View.GONE);
+                mNoFoodImage.setVisibility(View.INVISIBLE);
 
                 mExoPlayer.prepare(mediaSource, true, false);
 
@@ -207,6 +247,32 @@ public class DetailActivity extends AppCompatActivity {
 
 
     }
+
+
+    private String parseDescriptionForRecipe() {
+
+        String[] linesOfDescription = mDetailActivityViewModel.getRecipeModel().getSteps().get(mDetailActivityViewModel.getStepPosition()).getDescription().split(".");
+
+        StringBuilder parsedDescription = new StringBuilder();
+
+
+
+        boolean success;
+
+        for( String line : linesOfDescription) {
+
+            parsedDescription.append(line);
+
+
+
+            Toast.makeText(this, line, Toast.LENGTH_SHORT).show();
+
+        }
+
+        return new String(parsedDescription);
+
+    }
+
 
     /**
      * his method is called by initializePlayer method and returns a Media source
@@ -233,11 +299,14 @@ public class DetailActivity extends AppCompatActivity {
      */
     private void toggleFullScreen() {
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mFullScreenIcon.setImageResource(R.drawable.ic_fullscreen_skrink);
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         } else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mFullScreenIcon.setImageResource(R.drawable.ic_fullscreen_expand);
+
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         }
 
     }

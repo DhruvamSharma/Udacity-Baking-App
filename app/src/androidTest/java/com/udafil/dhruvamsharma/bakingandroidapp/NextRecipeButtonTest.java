@@ -1,6 +1,7 @@
 package com.udafil.dhruvamsharma.bakingandroidapp;
 
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -19,6 +20,8 @@ import static org.hamcrest.Matchers.anything;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,19 +29,36 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class NextRecipeButtonTest {
 
-    @Rule public ActivityTestRule<RecipeDetail> recipeDetailFragmentActivityTestRule =
-            new ActivityTestRule<>(RecipeDetail.class);
+    @Rule public ActivityTestRule<MainActivity> recipeDetailFragmentActivityTestRule =
+            new ActivityTestRule<>(MainActivity.class);
+
+    private IdlingResource mIdlingResource;
+    private String mRecipeName = "Nutella Pie";
+
+    @Before
+    public void registerIdlingResource() {
+        mIdlingResource = recipeDetailFragmentActivityTestRule.getActivity().getIdlingResource();
+
+        Espresso.registerIdlingResources(mIdlingResource);
+    }
 
     @Test
     public void checkForDataInAdapter() {
 
         //find the adapter view and perform a click action
-        onData(anything()).inAdapterView(withId(R.id.main_recipe_list_rv)).atPosition(0).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.main_recipe_list_rv)).atPosition(1).perform(click());
         //onView(withId(R.id.change_btn)).perform(click());
 
         //check if the data is same as expected
-        //onView(withId(R.id.recipe_heading_tv)).check(matches(withText("Nutella Pie")));
+        onView(withId(R.id.recipe_heading_tv)).check(matches(withText(mRecipeName)));
 
+    }
+
+    @After
+    public void unregisterIdlingResource() {
+        if(mIdlingResource != null){
+            Espresso.unregisterIdlingResources(mIdlingResource);
+        }
     }
 
 }

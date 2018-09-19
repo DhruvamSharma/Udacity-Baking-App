@@ -75,5 +75,4 @@ dependencies {
     implementation group: 'com.android.support.test.espresso', name: 'espresso-contrib', version: '3.0.2'
 
 
-
 }

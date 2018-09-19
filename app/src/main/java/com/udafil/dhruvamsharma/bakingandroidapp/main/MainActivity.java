@@ -12,6 +12,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
      */
     private void setupActivity() {
 
+        //testing purpose only
         MessageDelayer.processMessage("hi", this, mIdlingResource, this);
 
         //Getting data from the view model
@@ -80,10 +82,22 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
 
         binding.mainRecipeListRv.setAdapter(mAdapter);
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        if(getResources().getBoolean(R.bool.isTablet)) {
 
-        binding.mainRecipeListRv.setLayoutManager(manager);
+            GridLayoutManager manager = new GridLayoutManager(this, 2);
+            //manager.setOrientation(LinearLayoutManager.VERTICAL);
+
+            binding.mainRecipeListRv.setLayoutManager(manager);
+
+        } else {
+
+            LinearLayoutManager manager = new LinearLayoutManager(this);
+            manager.setOrientation(LinearLayoutManager.VERTICAL);
+
+            binding.mainRecipeListRv.setLayoutManager(manager);
+
+        }
+
 
 
     }

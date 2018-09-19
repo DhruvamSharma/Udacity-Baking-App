@@ -12,11 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".main.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".detail.DetailActivity" />
 
@@ -38,10 +33,21 @@
                 android:resource="@xml/recipe_widget_info" />
         </receiver>
 
-        <!-- 2. The service that will send our collection data to our widget. It needs the
-               permission android.permission.BIND_REMOTEVIEWS -->
-        <service android:name=".widget.WidgetService"
+        <!--
+             2. The service that will send our collection data to our widget. It needs the
+               permission android.permission.BIND_REMOTEVIEWS
+        -->
+        <service
+            android:name=".widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity android:name=".SplashscreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -9,5 +9,7 @@
     <color name="lightBlue">#ADDAE6</color>
     <color name="poloBlue">#90AADD</color>
 
+    <color name="transparent">@android:color/transparent</color>
+
 
 </resources>

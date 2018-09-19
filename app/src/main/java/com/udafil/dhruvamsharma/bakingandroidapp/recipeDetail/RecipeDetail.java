@@ -60,6 +60,8 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
     RecipeDetailFragment recipeDetailFragment;
 
+    private final String SIMPLE_FRAGMENT_TAG = "myfragmenttag";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +71,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
         setupActivity();
 
         //Setting up fragment
-        setUpFragment();
+        setUpFragment(savedInstanceState);
 
     }
 
@@ -139,22 +141,32 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     /**
      * A method that sets up the Fragments and pass the recipe data
      */
-    private void setUpFragment() {
+    private void setUpFragment(Bundle savedInstanceState) {
         //Constructing step list in phone mode
-        recipeDetailFragment = new RecipeDetailFragment();
+        if(savedInstanceState != null) {
+            recipeDetailFragment = (RecipeDetailFragment) getSupportFragmentManager().findFragmentByTag(SIMPLE_FRAGMENT_TAG);
+        } else {
 
-        //setting arguments for the fragment
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(getPackageName(), Parcels.wrap(recipeData));
-        bundle.putBoolean("isTwoPane", mTwoPane);
-        recipeDetailFragment.setArguments( bundle );
+            recipeDetailFragment = new RecipeDetailFragment();
+        }
 
-        //Fragment Manager set up
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(!recipeDetailFragment.isInLayout()) {
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.recipe_detail_fm, recipeDetailFragment)
-                .commit();
+            //setting arguments for the fragment
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(getPackageName(), Parcels.wrap(recipeData));
+            bundle.putBoolean("isTwoPane", mTwoPane);
+            recipeDetailFragment.setArguments( bundle );
+
+            //Fragment Manager set up
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_detail_fm, recipeDetailFragment, SIMPLE_FRAGMENT_TAG)
+                    .commit();
+
+        }
+
     }
 
     @Override
@@ -182,7 +194,7 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
 
         recipeData = GsonInstance.getGsonInstance().fromJson(RecipeRepository.getInstance().getRecipe(id, this), RecipeModel.class);
 
-        setUpFragment();
+        setUpFragment(null);
 
     }
 
@@ -307,5 +319,22 @@ public class RecipeDetail extends AppCompatActivity implements RecipeDetailFragm
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        getSupportFragmentManager().putFragment(outState, "myFragmentName", recipeDetailFragment);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            //recipeDetailFragment = (RecipeDetailFragment) getSupportFragmentManager().getFragment(savedInstanceState, "myFragmentName");
+        }
     }
 }

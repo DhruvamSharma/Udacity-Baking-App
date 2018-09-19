@@ -3,8 +3,11 @@ package com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.widget.RecipeWidget;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.RecipeRepository;
@@ -40,7 +44,7 @@ import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
  * {@link RecipeDetailFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class RecipeDetailFragment extends Fragment implements VerticalStepperForm{
+public class RecipeDetailFragment extends Fragment implements VerticalStepperForm {
 
     private OnFragmentInteractionListener mListener;
     private RecipeModel recipeData;
@@ -54,10 +58,16 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
     private BottomSheetBehavior bottomSheetBehavior;
     private FloatingActionButton changeRecipeButton;
 
-    public RecipeDetailFragment() {
-        // Required empty public constructor
-    }
+    private CoordinatorLayout coordinatorLayout;
 
+    private static final String STEPPER_STATE = "verticalStepForm";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -105,6 +115,14 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             setupBottomSheet(view);
             //this method handles fragment interactions
             handleFragmentInteractions(view);
+
+            //recognizing stepper's parent layout
+            coordinatorLayout = view.findViewById(R.id.stepper_parent_layout_cl);
+            if(getResources().getBoolean(R.bool.isTablet)) {
+                coordinatorLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+            } else {
+                coordinatorLayout.setBackgroundResource(R.drawable.ic_recipe_detail_fragment_background);
+            }
 
     }
 
@@ -155,8 +173,6 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, getActivity())
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
-                .showVerticalLineWhenStepsAreCollapsed(true)
-                .materialDesignInDisabledSteps(true)
                 .displayBottomNavigation(false) // It is true by default, so in this case this line is not necessary
                 .init();
 
@@ -180,7 +196,9 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
             //Trying to save the recipe
             RecipeWidget.selectRecipe(recipeData.getId(), getContext());
 
-            Toast.makeText(view.getContext(), "Reipe Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Recipe Saved", Toast.LENGTH_SHORT).show();
+
+
 
         });
 
@@ -273,6 +291,13 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         TextView stepShortDescription = view.findViewById(R.id.stepper_description_text_sl);
         stepShortDescription.setText("Click here to see the step detail");
 
+        // image to the image view if there is a thumbnail available
+        if(!recipeData.getSteps().get(stepNumber).getThumbnailURL().equals("")) {
+
+            ImageView imageView = view.findViewById(R.id.recipe_image_iv);
+            Glide.with(getContext()).load(recipeData.getSteps().get(stepNumber).getThumbnailURL()).into(imageView);
+        }
+
         if(mTwoPane) {
             //code for tablet layout
             view.setOnClickListener(view1 -> {
@@ -332,5 +357,45 @@ public class RecipeDetailFragment extends Fragment implements VerticalStepperFor
         void onFragmentInteraction(int position);
 
         void onRecipeChange(Integer id);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //store the state of the stepper for screen rotations
+
+        Parcelable parcelable = verticalStepperForm.onSaveInstanceState();
+
+        outState.putParcelable(STEPPER_STATE, parcelable);
+
+    }
+
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+
+        super.onViewStateRestored(savedInstanceState);
+
+        if( savedInstanceState != null &&savedInstanceState.containsKey(STEPPER_STATE)) {
+
+            verticalStepperForm.onRestoreInstanceState(savedInstanceState.getParcelable(STEPPER_STATE));
+
+
+            //verticalStepperForm.goToStep(stateOfStepper, false);
+
+            //onStepOpening(stateOfStepper);
+
+            //verticalStepperForm.onRestoreInstanceState(parcelable);
+
+
+
+
+
+
+        }
+
+
     }
 }

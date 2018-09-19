@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<layout>
-
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ghostWhite"
         tools:context=".main.MainActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+
+        android:background="@drawable/ic_main_activity_background"
+        android:layout_height="match_parent">
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/main_recipe_list_rv"
-            android:background="@color/ghostWhite"
+
+            android:background="@null"
             android:layout_marginBottom="32dp"
 
             app:layout_constraintTop_toBottomOf="@id/main_view"
@@ -49,5 +54,8 @@
 
     </android.support.constraint.ConstraintLayout>
 
-</layout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
 

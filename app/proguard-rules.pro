@@ -60,3 +60,18 @@
 -dontwarn android.app.Notification
 
 ##---------------End: proguard configuration for LeakCanary ----------
+
+
+##---------------Begin: proguard configuration for Glide  ----------
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# for DexGuard only
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+##---------------End: proguard configuration for Glide  ----------

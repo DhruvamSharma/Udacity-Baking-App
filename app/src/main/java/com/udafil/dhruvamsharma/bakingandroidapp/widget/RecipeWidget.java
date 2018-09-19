@@ -44,7 +44,7 @@ public class RecipeWidget extends AppWidgetProvider {
 
         // Set cut corner background for API 23+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            views.setInt( R.id.widget_background,"setBackgroundResource", R.drawable.widget_shape);
+            views.setInt( R.id.widget_background,"setBackgroundResource", R.drawable.ic_detail_activity_background);
         }
 
         ingredientSet = GsonInstance.getGsonInstance().fromJson(RecipeRepository.getInstance().getRecipe(modelPosition, context), RecipeModel.class);

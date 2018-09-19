@@ -17,7 +17,6 @@ public class SplashscreenActivity extends AppCompatActivity {
 
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;
-    private RecipeRepository recipeRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,18 @@ public class SplashscreenActivity extends AppCompatActivity {
 
         //Getting shared preference
         SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.RECIPE_DATA_PREFERENCE_FILE), MODE_PRIVATE);
-        Set<String> data = sharedPreferences.getStringSet(getPackageName(), null);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("initialStart", true);
+        editor.apply();
+
         //if the shared preferences file is null, I need to first get the data and meanwhile
-        //show the splashscreen, but if there is data, we just move to MainActivity
-        if(data == null) {
+        //show the splash screen, but if there is data, we just move to MainActivity
+
+        if(sharedPreferences.getBoolean("initialStart", true)) {
             try {
+
+                editor.putBoolean("initialStart", false);
+
                 RecipeRepository.getInstance().getRecipeData(getApplication().getApplicationContext());
 
                 /*

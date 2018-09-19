@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
 
     private MainActivityViewModel viewModel;
     private RecipeListAdapter mAdapter;
-    private ActivityMainBinding binding;
+    private RecyclerView mainRecipeListRv;
 
     // The Idling Resource which will be null in production.
     @Nullable private RecipeIdlingResource mIdlingResource;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         /*
         //LeakCanary setup to see the leaks in the application
@@ -57,10 +57,6 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
         //setting up the views in the activity
         setupActivity();
 
-        //Setting up animations
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setupWindowAnimations();
-        }
 
     }
 
@@ -74,27 +70,31 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
         //testing purpose only
         MessageDelayer.processMessage("hi", this, mIdlingResource, this);
 
+        mainRecipeListRv = findViewById(R.id.main_recipe_list_rv);
+
         //Getting data from the view model
         List<RecipeModel> recipeData = viewModel.getRecipeData();
 
         //Setting up the recycler view
         mAdapter = new RecipeListAdapter(recipeData, this);
 
-        binding.mainRecipeListRv.setAdapter(mAdapter);
+        mainRecipeListRv.setAdapter(mAdapter);
 
         if(getResources().getBoolean(R.bool.isTablet)) {
 
             GridLayoutManager manager = new GridLayoutManager(this, 2);
             //manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-            binding.mainRecipeListRv.setLayoutManager(manager);
+            mainRecipeListRv.setLayoutManager(manager);
 
         } else {
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-            binding.mainRecipeListRv.setLayoutManager(manager);
+            mainRecipeListRv.setBackgroundResource(R.drawable.ic_main_activity_background);
+
+            mainRecipeListRv.setLayoutManager(manager);
 
         }
 
@@ -103,15 +103,7 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setupWindowAnimations() {
-        Slide slide = new Slide();
-        slide.setDuration(1000);
-        getWindow().setExitTransition(slide);
 
-
-        getWindow().setReenterTransition(slide);
-    }
 
     @Override
     public void onDone(List<RecipeModel> recipeModel) {

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,14 +14,11 @@ import android.widget.TextView;
 
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
-import com.udafil.dhruvamsharma.bakingandroidapp.detail.DetailActivity;
 import com.udafil.dhruvamsharma.bakingandroidapp.recipeDetail.RecipeDetail;
-import com.udafil.dhruvamsharma.bakingandroidapp.utils.ImageUtils;
 
 import org.parceler.Parcels;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Adapter class for Recipe List obtained from ViewModel
@@ -31,13 +27,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     private static List<RecipeModel> recipeModel;
     private Context context;
-    private int[] imageData;
 
 
     public RecipeListAdapter(List<RecipeModel> data, Context context) {
         recipeModel = data;
         this.context = context;
-        imageData = ImageUtils.getImageIds();
     }
 
 

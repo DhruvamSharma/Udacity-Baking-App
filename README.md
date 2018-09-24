@@ -10,7 +10,7 @@ All the activity or screens are different for the tablet and the phone.
 ### Ingredients
 1. Fragments
 2. RecyclerView
-3. Architecture Components
+3. Architecture Components (View Models)
 4. Exo Player
 5. Home Screen Widgets
 6. Shared Preferences

@@ -14,7 +14,7 @@ All the activity or screens are different for the tablet and the phone.
 4. Exo Player
 5. Home Screen Widgets
 6. Shared Preferences
-7. Fast Android Networking
+7. Fast Android Networking (Networking Library)
 8. Testing (JUnit 4 and Espresso Testing)
 
 ### Screenshots

@@ -5,7 +5,6 @@ This project was developed under Udacity Android Developer Nanodegree Program. T
 
 Upon clicking a recipe, the user is presented with a list of steps. The user can also see the ingredient list. Their is a functionality to change the recipe within the steps list activity. In this activity, the user can also save the recipe to the widget. Upon selecting a step, the user is presented with more details about the steps and also a video if there is a video present that helps in making step more clear.
 
-All the activity or screens are different for the tablet and the phone.
  
 ### Ingredients
 1. Fragments

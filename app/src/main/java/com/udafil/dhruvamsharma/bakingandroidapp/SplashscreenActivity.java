@@ -27,8 +27,6 @@ public class SplashscreenActivity extends AppCompatActivity {
         //Getting shared preference
         SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.RECIPE_DATA_PREFERENCE_FILE), MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("initialStart", true);
-        editor.apply();
 
         //if the shared preferences file is null, I need to first get the data and meanwhile
         //show the splash screen, but if there is data, we just move to MainActivity
@@ -36,8 +34,8 @@ public class SplashscreenActivity extends AppCompatActivity {
         if(sharedPreferences.getBoolean("initialStart", true)) {
             try {
 
-                editor.putBoolean("initialStart", false);
-
+                editor.putBoolean("initialStart", true);
+                editor.apply();
                 RecipeRepository.getInstance().getRecipeData(getApplication().getApplicationContext());
 
                 /*

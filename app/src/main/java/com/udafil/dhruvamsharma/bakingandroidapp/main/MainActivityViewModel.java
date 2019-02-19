@@ -27,14 +27,14 @@ public class MainActivityViewModel extends AndroidViewModel{
      * Initialization method for ViewModel
      * This methods gets the recipe data and assign it to the repository variable
      */
-    public void init() {
+    void init() {
 
         recipeRepository = RecipeRepository.getInstance();
 
     }
 
 
-    public List<RecipeModel> getRecipeData() {
+    List<RecipeModel> getRecipeData() {
 
         if(model == null) {
 
@@ -44,17 +44,14 @@ public class MainActivityViewModel extends AndroidViewModel{
                 recipeRepository.getRecipeData(getApplication().getApplicationContext());
 
                 Set<String> set = recipeRepository.getRecipeSet(getApplication().getApplicationContext());
-                for (String data : set) {
-
-                    model.add(GsonInstance.getGsonInstance().fromJson(data, RecipeModel.class));
-
+                if(set != null) {
+                    for (String data : set) {
+                        model.add(GsonInstance.getGsonInstance().fromJson(data, RecipeModel.class));
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-
             if (model == null) {
                 Log.e("MainActivityViewModel", "model is empty");
             }

@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.squareup.leakcanary.LeakCanary;
 import com.udafil.dhruvamsharma.bakingandroidapp.R;
 import com.udafil.dhruvamsharma.bakingandroidapp.data.model.RecipeModel;
-import com.udafil.dhruvamsharma.bakingandroidapp.databinding.ActivityMainBinding;
 import com.udafil.dhruvamsharma.bakingandroidapp.main.IdlingResource.RecipeIdlingResource;
 
 import java.util.List;

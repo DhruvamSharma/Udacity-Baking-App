@@ -48,7 +48,7 @@ final public class RecipeRepository {
                     @Override
                     public void onResponse(List<RecipeModel> response) {
 
-                        //Toast.makeText(context, response.get(0).getIngredients().get(0).getIngredient() + "here ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.get(0).getIngredients().get(0).getIngredient() + "here ", Toast.LENGTH_SHORT).show();
 
                         //method to set the response to the list because final variable couldn't do much!
                         setValue(response);

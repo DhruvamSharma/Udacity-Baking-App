@@ -34,11 +34,9 @@ public class SplashscreenActivity extends AppCompatActivity {
 
         if(sharedPreferences.getBoolean("initialStart", true)) {
             try {
-
                 editor.putBoolean("initialStart", false);
                 editor.apply();
                 RecipeRepository.getInstance().getRecipeData(getApplication().getApplicationContext());
-                Toast.makeText(this, "in splashscreen", Toast.LENGTH_SHORT).show();
                 /*
                  * Showing splash screen with a timer. This will be useful when you
                  * want to show case your app logo / company

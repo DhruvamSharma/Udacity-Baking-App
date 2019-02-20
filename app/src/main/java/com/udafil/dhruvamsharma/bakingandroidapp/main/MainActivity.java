@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MessageDelayer.De
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-            mainRecipeListRv.setBackgroundResource(R.drawable.ic_main_activity_background);
+            //mainRecipeListRv.setBackgroundResource(R.drawable.ic_main_activity_background);
 
             mainRecipeListRv.setLayoutManager(manager);
 

@@ -4,36 +4,30 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:background="@drawable/ic_main_activity_background"
         android:layout_height="match_parent"
         tools:context=".main.MainActivity">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-
-        android:background="@drawable/ic_main_activity_background"
-        android:layout_height="match_parent">
-
 
         <TextView
+            android:id="@+id/main_heading_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/main_heading_tv"
-            android:layout_margin="32dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
             android:text="@string/app_name"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/black"
             android:textStyle="bold"
+            android:layout_margin="32dp"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/main_recipe_list_rv"/>
+            app:layout_constraintBottom_toTopOf="@id/main_view"/>
 
         <View
             android:layout_width="64dp"
             android:layout_height="16dp"
             android:background="@color/poloBlue"
             android:id="@+id/main_view"
-            android:layout_marginBottom="32dp"
 
             app:layout_constraintStart_toStartOf="@id/main_heading_tv"
             app:layout_constraintTop_toBottomOf="@id/main_heading_tv"/>
@@ -41,10 +35,8 @@
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/main_recipe_list_rv"
-
-            android:background="@null"
             android:layout_marginBottom="32dp"
 
             app:layout_constraintTop_toBottomOf="@id/main_view"
@@ -55,7 +47,5 @@
     </android.support.constraint.ConstraintLayout>
 
 
-
-    </android.support.constraint.ConstraintLayout>
 
 

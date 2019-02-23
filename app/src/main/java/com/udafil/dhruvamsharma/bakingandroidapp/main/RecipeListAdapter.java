@@ -28,6 +28,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     private static List<RecipeModel> recipeModel;
     private Context context;
 
+    private int[] colorList = {R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark, R.color.pattensBlue};
+
 
     public RecipeListAdapter(List<RecipeModel> data, Context context) {
         recipeModel = data;
@@ -45,7 +47,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         TextView mTitle;
         TextView mServings;
         CardView viewHolderMainCV;
-        ConstraintLayout mBackground;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
@@ -53,10 +54,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             mTitle = itemView.findViewById(R.id.view_holder_main_title_tv);
             mServings = itemView.findViewById(R.id.view_holder_main_servings_tv);
             viewHolderMainCV = itemView.findViewById(R.id.view_holder_main_cv);
-            mBackground = itemView.findViewById(R.id.view_holder_main_background_cl);
-
             //on clicking a card, detail activity should open
-            mBackground.setOnClickListener((view)-> {
+            viewHolderMainCV.setOnClickListener((view)-> {
 
                 Intent intent = new Intent(context, RecipeDetail.class);
                 Parcelable wrapped = Parcels.wrap(recipeModel.get(getAdapterPosition()));
@@ -88,7 +87,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
         holder.mTitle.setText(recipeModel.get(position).getName());
         holder.mServings.setText("Servings: " + recipeModel.get(position).getServings());
-        //holder.mBackground.setBackground(context.getResources().getDrawable(imageData[position]));
+        //holder.viewHolderMainCV.setBackgroundColor(colorList[position]);
     }
 
     /**
